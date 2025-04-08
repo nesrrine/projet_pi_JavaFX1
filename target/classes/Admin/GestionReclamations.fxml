@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/21.0.2"
+           fx:controller="controllers.Admin.GestionReclamationsController"
+           prefHeight="550" prefWidth="750"
+           stylesheets="@/styles/style.css"
+           style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-padding: 20;">
+    <children>
+        <VBox spacing="20" alignment="TOP_CENTER">
+            <Label text="Gestion des Réclamations">
+                <font>
+                    <Font name="Segoe UI Bold" size="22.0" />
+                </font>
+            </Label>
+
+            <TableView fx:id="reclamationTable" prefWidth="700" prefHeight="450">
+                <columns>
+                    <TableColumn fx:id="titreColumn" text="Titre" prefWidth="180"/>
+                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                    <TableColumn fx:id="auteurColumn" text="Auteur" prefWidth="120"/>
+                    <TableColumn fx:id="cibleColumn" text="Cible" prefWidth="120"/>
+                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </children>
+</StackPane>
