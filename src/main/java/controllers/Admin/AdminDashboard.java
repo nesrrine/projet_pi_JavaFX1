@@ -13,22 +13,14 @@ import java.io.IOException;
 
 public class AdminDashboard {
 
-    @FXML
-    private Button gestionUserButton;
-    @FXML
-    private Button gestionReclamationButton;
-
-    @FXML
-    private Button gestionVlogButton;
-
-    @FXML
-    private Button logoutButton;
-
-    @FXML
-    private ImageView profileIcon;
-
-    @FXML
-    private StackPane contentArea;
+    @FXML private Button gestionUserButton;
+    @FXML private Button gestionReclamationButton;
+    @FXML private Button gestionVlogButton;
+    @FXML private Button gestionTransportButton;
+    @FXML private Button gestionRestaurantButton;
+    @FXML private Button logoutButton;
+    @FXML private ImageView profileIcon;
+    @FXML private StackPane contentArea;
 
     private Button currentActiveButton;
 
@@ -51,6 +43,10 @@ public class AdminDashboard {
                 " -fx-background-radius: 5;";
 
         gestionUserButton.setStyle(defaultStyle);
+        gestionReclamationButton.setStyle(defaultStyle);
+        gestionVlogButton.setStyle(defaultStyle);
+        gestionTransportButton.setStyle(defaultStyle);
+        gestionRestaurantButton.setStyle(defaultStyle);
 
         if (currentActiveButton != null) {
             currentActiveButton.setStyle(activeStyle);
@@ -88,15 +84,16 @@ public class AdminDashboard {
     }
 
     private void loadUserManagement() throws IOException {
-        currentActiveButton = gestionUserButton;
         contentArea.getChildren().clear();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/UserManagement.fxml"));
         Parent userView = loader.load();
         contentArea.getChildren().add(userView);
     }
+
     @FXML
     private void handleGestionReclamation() {
         currentActiveButton = gestionReclamationButton;
+        updateButtonStyles();
         try {
             contentArea.getChildren().clear();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionReclamations.fxml"));
@@ -111,6 +108,7 @@ public class AdminDashboard {
     @FXML
     private void handleGestionVlog() {
         currentActiveButton = gestionVlogButton;
+        updateButtonStyles();
         try {
             contentArea.getChildren().clear();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionVlogs.fxml"));
@@ -122,4 +120,33 @@ public class AdminDashboard {
         }
     }
 
+    @FXML
+    private void handleGestionTransport() {
+        currentActiveButton = gestionTransportButton;
+        updateButtonStyles();
+        try {
+            contentArea.getChildren().clear();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionTransports.fxml"));
+            Parent view = loader.load();
+            contentArea.getChildren().add(view);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de la gestion des transports.");
+        }
+    }
+
+    @FXML
+    private void handleGestionRestaurant() {
+        currentActiveButton = gestionRestaurantButton;
+        updateButtonStyles();
+        try {
+            contentArea.getChildren().clear();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionRestaurants.fxml"));
+            Parent view = loader.load();
+            contentArea.getChildren().add(view);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de la gestion des restaurants.");
+        }
+    }
 }

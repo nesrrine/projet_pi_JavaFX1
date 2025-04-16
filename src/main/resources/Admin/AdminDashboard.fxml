@@ -38,6 +38,14 @@
                 <Button fx:id="gestionVlogButton" onAction="#handleGestionVlog" prefHeight="40.0" prefWidth="210.0"
                         style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-weight: bold; -fx-background-radius: 5; -fx-border-color: #e0e0e0; -fx-border-radius: 5;"
                         text="Gestion Vlogs" />
+
+                <Button fx:id="gestionTransportButton" onAction="#handleGestionTransport" prefHeight="40.0" prefWidth="210.0"
+                        style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-weight: bold; -fx-background-radius: 5; -fx-border-color: #e0e0e0; -fx-border-radius: 5;"
+                        text="Gestion Transports" />
+
+                <Button fx:id="gestionRestaurantButton" onAction="#handleGestionRestaurant" prefHeight="40.0" prefWidth="210.0"
+                        style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-weight: bold; -fx-background-radius: 5; -fx-border-color: #e0e0e0; -fx-border-radius: 5;"
+                        text="Gestion Restaurants" />
             </VBox>
 
 
