@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane fx:controller="controllers.ProfileController"
+            xmlns="http://javafx.com/javafx/21.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="750.0" prefHeight="550.0">
+    <children>
+        <VBox fx:id="mainBox" spacing="15" alignment="TOP_CENTER" layoutX="0" layoutY="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+              style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 4);">
+
+            <HBox alignment="TOP_LEFT" prefWidth="-Infinity">
+                <Button text="← Retour" onAction="#handleBack"
+                        style="-fx-background-color: transparent; -fx-text-fill: #4CAF50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+            </HBox>
+            <Label text="Mon Profil" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+            <TextField fx:id="firstNameField" promptText="Prénom" maxWidth="400" />
+            <TextField fx:id="lastNameField" promptText="Nom" maxWidth="400" />
+            <TextField fx:id="emailField" promptText="Email" maxWidth="400" />
+            <TextField fx:id="addressField" promptText="Adresse" maxWidth="400" />
+            <TextField fx:id="phoneField" promptText="Téléphone" maxWidth="400" />
+            <DatePicker fx:id="birthDatePicker" promptText="Date de naissance" maxWidth="400" />
+            <ComboBox fx:id="roleComboBox" promptText="Rôle" maxWidth="400" disable="true"/>
+
+            <PasswordField fx:id="passwordField" promptText="Nouveau mot de passe" maxWidth="400" />
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="updateProfileButton" text="Modifier le profil" onAction="#handleUpdateProfile"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" />
+                <Button fx:id="deleteAccountButton" text="Supprimer mon compte" onAction="#handleDeleteAccount"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" />
+            </HBox>
+
+        </VBox>
+    </children>
+</AnchorPane>
