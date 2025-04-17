@@ -8,9 +8,22 @@
       </list>
     </option>
   </component>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_18" project-jdk-name="23" project-jdk-type="JavaSDK" />
+  <component name="ProjectType">
+    <option name="id" value="jpab" />
+  </component>
+=======
+>>>>>>> Ons
   <component name="PWA">
     <option name="enabled" value="true" />
     <option name="wasEnabledAtLeastOnce" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="21" project-jdk-type="JavaSDK" />
+<<<<<<< HEAD
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
+>>>>>>> Ons
 </project>

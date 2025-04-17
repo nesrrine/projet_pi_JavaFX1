@@ -13,6 +13,19 @@ import java.io.IOException;
 
 public class AdminDashboard {
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    @FXML private Button gestionUserButton;
+    @FXML private Button gestionReclamationButton;
+    @FXML private Button gestionVlogButton;
+    @FXML private Button gestionTransportButton;
+    @FXML private Button gestionRestaurantButton;
+    @FXML private Button logoutButton;
+    @FXML private ImageView profileIcon;
+    @FXML private StackPane contentArea;
+=======
+>>>>>>> Ons
     @FXML
     private Button gestionUserButton;
     @FXML
@@ -29,6 +42,10 @@ public class AdminDashboard {
 
     @FXML
     private StackPane contentArea;
+<<<<<<< HEAD
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
+>>>>>>> Ons
 
     private Button currentActiveButton;
 
@@ -51,6 +68,16 @@ public class AdminDashboard {
                 " -fx-background-radius: 5;";
 
         gestionUserButton.setStyle(defaultStyle);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        gestionReclamationButton.setStyle(defaultStyle);
+        gestionVlogButton.setStyle(defaultStyle);
+        gestionTransportButton.setStyle(defaultStyle);
+        gestionRestaurantButton.setStyle(defaultStyle);
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
+>>>>>>> Ons
 
         if (currentActiveButton != null) {
             currentActiveButton.setStyle(activeStyle);
@@ -88,15 +115,36 @@ public class AdminDashboard {
     }
 
     private void loadUserManagement() throws IOException {
+<<<<<<< HEAD
         currentActiveButton = gestionUserButton;
+=======
+<<<<<<< HEAD
+=======
+        currentActiveButton = gestionUserButton;
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
+>>>>>>> Ons
         contentArea.getChildren().clear();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/UserManagement.fxml"));
         Parent userView = loader.load();
         contentArea.getChildren().add(userView);
     }
+<<<<<<< HEAD
     @FXML
     private void handleGestionReclamation() {
         currentActiveButton = gestionReclamationButton;
+=======
+<<<<<<< HEAD
+
+    @FXML
+    private void handleGestionReclamation() {
+        currentActiveButton = gestionReclamationButton;
+        updateButtonStyles();
+=======
+    @FXML
+    private void handleGestionReclamation() {
+        currentActiveButton = gestionReclamationButton;
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
+>>>>>>> Ons
         try {
             contentArea.getChildren().clear();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionReclamations.fxml"));
@@ -111,6 +159,13 @@ public class AdminDashboard {
     @FXML
     private void handleGestionVlog() {
         currentActiveButton = gestionVlogButton;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        updateButtonStyles();
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
+>>>>>>> Ons
         try {
             contentArea.getChildren().clear();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionVlogs.fxml"));
@@ -122,4 +177,39 @@ public class AdminDashboard {
         }
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    @FXML
+    private void handleGestionTransport() {
+        currentActiveButton = gestionTransportButton;
+        updateButtonStyles();
+        try {
+            contentArea.getChildren().clear();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionTransports.fxml"));
+            Parent view = loader.load();
+            contentArea.getChildren().add(view);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de la gestion des transports.");
+        }
+    }
+
+    @FXML
+    private void handleGestionRestaurant() {
+        currentActiveButton = gestionRestaurantButton;
+        updateButtonStyles();
+        try {
+            contentArea.getChildren().clear();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/GestionRestaurants.fxml"));
+            Parent view = loader.load();
+            contentArea.getChildren().add(view);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de la gestion des restaurants.");
+        }
+    }
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
+>>>>>>> Ons
 }
