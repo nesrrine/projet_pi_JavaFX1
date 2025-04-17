@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.LogementController">
+    <VBox spacing="10" alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Titre -->
+        <Label text="Gestion des Logements" style="-fx-font-size: 18px;"/>
+
+        <!-- TableView -->
+        <TableView fx:id="tableLogement" prefHeight="250">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colTitre" text="Titre" prefWidth="120"/>
+                <TableColumn fx:id="colDescription" text="Description" prefWidth="150"/>
+                <TableColumn fx:id="colLocalisation" text="Localisation" prefWidth="120"/>
+                <TableColumn fx:id="colPrix" text="Prix" prefWidth="80"/>
+            </columns>
+        </TableView>
+
+        <!-- Formulaire de gestion des Logements (visible uniquement en mode modification) -->
+        <VBox fx:id="formSection" visible="false" spacing="10" alignment="CENTER">
+            <TextField fx:id="tfTitre" promptText="Titre du logement"/>
+            <TextArea fx:id="taDescription" promptText="Description du logement"/>
+            <TextField fx:id="tfLocalisation" promptText="Localisation"/>
+            <TextField fx:id="tfPrix" promptText="Prix"/>
+
+            <!-- Bouton Sauvegarder dans la section formulaire -->
+            <Button fx:id="btnSave" text="Sauvegarder" onAction="#sauvegarderLogement" />
+        </VBox>
+
+        <!-- Boutons d'actions -->
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Charger les Logements" onAction="#onLoadLogementsButtonClicked"/>
+            <Button fx:id="btnModifier" text="Modifier" onAction="#modifierLogement"/>
+            <Button fx:id="btnSupprimer" text="Supprimer" onAction="#supprimerLogement"/>
+            <Button text="Réinitialiser" onAction="#resetForm"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

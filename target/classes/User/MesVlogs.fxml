@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21.0.2"
+            fx:controller="controllers.User.MesVlogsController"
+            fitToWidth="true"
+            style="-fx-background: white;">
+    <content>
+        <FlowPane fx:id="vlogContainer"
+                  hgap="20" vgap="20"
+                  alignment="TOP_LEFT"
+                  prefWrapLength="700"
+                  style="-fx-padding: 20;" />
+    </content>
+</ScrollPane>
