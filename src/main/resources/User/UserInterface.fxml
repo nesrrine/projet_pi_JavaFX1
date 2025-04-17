@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<<<<<<< HEAD
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+=======
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
 
 <AnchorPane prefHeight="725.0" prefWidth="1018.0" stylesheets="@/styles/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.User.UserInterfaceController">
 
@@ -10,6 +24,7 @@
 
            <!-- Menu Bar -->
         <VBox layoutX="0.0" layoutY="0.0" prefHeight="49.0" prefWidth="695.0">
+<<<<<<< HEAD
             <MenuBar fx:id="menuBar" prefHeight="79.0" prefWidth="695.0" styleClass="menu-bar">
                 <menus>
                     <Menu text="Vlogs">
@@ -48,10 +63,24 @@
                         </items>
                     </Menu>
 
+=======
+            <MenuBar prefHeight="79.0" prefWidth="695.0" styleClass="menu-bar">
+                <menus>
+                    <Menu text="Vlog">
+                        <MenuItem onAction="#handleAllVlogs" text="Tous les Vlogs" />
+                        <MenuItem onAction="#handleMyVlogs" text="Mes Vlogs" />
+                        <MenuItem onAction="#handleCreateVlog" text="Créer un Vlog" />
+                    </Menu>
+                    <Menu text="Réclamations">
+                        <MenuItem onAction="#handleMyReclamations" text="Mes Réclamations" />
+                        <MenuItem onAction="#handleCreateReclamation" text="Créer une Réclamation" />
+                    </Menu>
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
                 </menus>
             </MenuBar>
         </VBox>
 
+<<<<<<< HEAD
 
         <!-- Top bar with profile icon -->
         <HBox alignment="CENTER_RIGHT" layoutX="695.0" layoutY="5.0" prefHeight="42.0" prefWidth="320.0" style="-fx-background-color: white;">
@@ -65,6 +94,17 @@
                 <Pane minWidth="20" />
                 <javafx.scene.control.Button fx:id="logoutButton" text="Déconnexion" onAction="#handleLogout" style="-fx-background-color: #dc3545; -fx-text-fill: white;"/>
             </children>
+=======
+        <!-- Top bar with profile icon -->
+        <HBox alignment="CENTER_RIGHT" layoutX="695.0" layoutY="5.0" prefHeight="42.0" prefWidth="320.0" style="-fx-background-color: white;">
+            <Region HBox.hgrow="ALWAYS" />
+            <ImageView fx:id="profileIcon" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleProfileClick" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                <image>
+                    <Image url="@/images/profile.png" />
+                </image>
+            </ImageView>
+            <Pane minWidth="20" />
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
         </HBox>
 
         <!-- Main content -->
@@ -74,5 +114,9 @@
             </content>
         </ScrollPane>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
     </children>
 </AnchorPane>

@@ -3,6 +3,7 @@ package controllers.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+<<<<<<< HEAD
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,6 +12,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.User;
 import utils.Session;
+=======
+import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
 
 import java.io.IOException;
 
@@ -19,11 +28,15 @@ public class UserInterfaceController {
     @FXML private VBox mainContent;
     @FXML private Button logoutButton;
     @FXML private ImageView profileIcon;
+<<<<<<< HEAD
     @FXML private MenuBar menuBar;
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
 
     @FXML
     public void initialize() {
         loadPartial("/user/HomeUserWelcome.fxml");
+<<<<<<< HEAD
         configureMenuBasedOnRole();
     }
 
@@ -58,6 +71,11 @@ public class UserInterfaceController {
             e.printStackTrace();
         }
     }
+=======
+    }
+
+
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
 
     @FXML
     private void handleProfileClick() {
@@ -71,23 +89,33 @@ public class UserInterfaceController {
 
     @FXML
     private void handleMyVlogs() {
+<<<<<<< HEAD
         if (checkVoyageurAccess()) return;
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
         loadPartial("/user/MesVlogs.fxml");
     }
 
     @FXML
     private void handleCreateVlog() {
+<<<<<<< HEAD
         if (checkVoyageurAccess()) return;
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
         loadPartial("/user/CreateVlog.fxml");
     }
 
     @FXML
     private void handleMyReclamations() {
+<<<<<<< HEAD
         if (checkVoyageurAccess()) return;
+=======
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
         loadPartial("/user/MesReclamations.fxml");
     }
 
     @FXML
+<<<<<<< HEAD
     private void handleMylogements() {
         if (checkVoyageurAccess()) return;
         loadPartial("/user/ajoutLogement.fxml");
@@ -162,11 +190,21 @@ public class UserInterfaceController {
         alert.showAndWait();
     }
 
+=======
+    private void handleCreateReclamation() {
+        loadPartial("/user/CreateReclamation.fxml");
+    }
+
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
     private void loadPartial(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Node content = loader.load();
+<<<<<<< HEAD
             mainContent.getChildren().setAll(content);
+=======
+            mainContent.getChildren().setAll(content); // replaces VBox content
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
         } catch (IOException e) {
             e.printStackTrace();
         }

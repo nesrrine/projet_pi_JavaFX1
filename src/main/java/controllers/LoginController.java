@@ -30,10 +30,15 @@ public class LoginController {
 
         User user = userService.getByEmail(email);
         if (user != null && userService.login(email, password)) {
+<<<<<<< HEAD
             System.out.println("Login successful for user ID: " + user.getId()); // Debug log
             Session.setCurrentUser(user);
             System.out.println("Session user ID after set: " + Session.getCurrentUser().getId()); // Debug log
             showAlert(Alert.AlertType.INFORMATION, "Connexion réussie !");
+=======
+            showAlert(Alert.AlertType.INFORMATION, "Connexion réussie !");
+            Session.setCurrentUser(user); // ← add this
+>>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
             loadRoleUI(user.getRole());
         } else {
             showAlert(Alert.AlertType.ERROR, "Email ou mot de passe incorrect.");
