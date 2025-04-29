@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Directions</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 999;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            max-width: 300px;
+        }
+        #location-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            max-width: 300px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: #2ecc71;
+        }
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        .btn-warning:hover {
+            background-color: #d35400;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .btn-google {
+            background-color: #4285f4;
+        }
+        .btn-google:hover {
+            background-color: #3367d6;
+        }
+        #restaurant-name {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .coordinate-value {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .route-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .location-status {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .location-status.error {
+            color: #e74c3c;
+        }
+        .location-status.success {
+            color: #2ecc71;
+        }
+        .instruction {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        .location-option {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+        .location-option:hover {
+            background-color: #ecf0f1;
+        }
+        .location-option.selected {
+            background-color: #d6eaf8;
+            border-left: 4px solid #3498db;
+        }
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        #location-search {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .search-result {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        .search-result:hover {
+            background-color: #f5f5f5;
+        }
+        .location-category {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #34495e;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .action-buttons .btn {
+            flex: 1;
+        }
+        .action-buttons-row {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="info">
+        <h3 id="restaurant-name">Restaurant</h3>
+        <p id="restaurant-address">Adresse</p>
+        <p>Latitude: <span id="lat-display" class="coordinate-value">0</span></p>
+        <p>Longitude: <span id="lng-display" class="coordinate-value">0</span></p>
+        <p id="location-status" class="location-status">Statut de localisation: En attente...</p>
+        <button id="get-directions" class="btn btn-success">Obtenir l'itinéraire</button>
+        <div id="route-info" class="route-info" style="display: none;">
+            <p><strong>Distance:</strong> <span id="route-distance">0</span> km</p>
+            <p><strong>Durée estimée:</strong> <span id="route-duration">0</span> min</p>
+        </div>
+        <div class="action-buttons-row">
+            <button id="open-google-maps" class="btn btn-google">Ouvrir dans Google Maps</button>
+        </div>
+    </div>
+    
+    <div id="location-selector">
+        <p class="instruction">Sélectionnez votre point de départ ou cliquez sur la carte pour choisir un emplacement personnalisé.</p>
+        
+        <div class="search-container">
+            <input type="text" id="location-search" placeholder="Rechercher un lieu...">
+            <div id="search-results"></div>
+        </div>
+        
+        <button id="get-current-location" class="btn btn-warning">
+            <i class="fa fa-location-arrow"></i> Utiliser ma position actuelle
+        </button>
+        
+        <div class="location-category">Grandes villes</div>
+        <div class="location-option selected" data-lat="36.8065" data-lng="10.1815">
+            <strong>Tunis</strong><br>
+            <small>36.8065, 10.1815</small>
+        </div>
+        
+        <div class="location-option" data-lat="36.4540" data-lng="10.7350">
+            <strong>Sousse</strong><br>
+            <small>36.4540, 10.7350</small>
+        </div>
+        
+        <div class="location-option" data-lat="33.8869" data-lng="10.0982">
+            <strong>Sfax</strong><br>
+            <small>33.8869, 10.0982</small>
+        </div>
+        
+        <div class="location-option" data-lat="34.7398" data-lng="10.7600">
+            <strong>Gabès</strong><br>
+            <small>34.7398, 10.7600</small>
+        </div>
+        
+        <div class="location-category">Zones touristiques</div>
+        <div class="location-option" data-lat="36.8982" data-lng="10.1896">
+            <strong>La Marsa</strong><br>
+            <small>36.8982, 10.1896</small>
+        </div>
+        
+        <div class="location-option" data-lat="36.4022" data-lng="10.6171">
+            <strong>Hammamet</strong><br>
+            <small>36.4022, 10.6171</small>
+        </div>
+        
+        <div class="location-option" data-lat="33.8932" data-lng="10.8456">
+            <strong>Djerba</strong><br>
+            <small>33.8932, 10.8456</small>
+        </div>
+        
+        <div class="location-option" data-lat="35.8245" data-lng="10.6346">
+            <strong>Monastir</strong><br>
+            <small>35.8245, 10.6346</small>
+        </div>
+        
+        <div class="location-category">Autres lieux</div>
+        <div class="location-option" data-lat="36.7333" data-lng="10.2333">
+            <strong>Carthage</strong><br>
+            <small>36.7333, 10.2333</small>
+        </div>
+        
+        <div class="location-option" data-lat="36.4512" data-lng="8.7757">
+            <strong>El Kef</strong><br>
+            <small>36.4512, 8.7757</small>
+        </div>
+        
+        <div class="location-option" data-lat="35.1667" data-lng="8.8333">
+            <strong>Gafsa</strong><br>
+            <small>35.1667, 8.8333</small>
+        </div>
+        
+        <div class="location-option" data-lat="36.5072" data-lng="9.1850">
+            <strong>Siliana</strong><br>
+            <small>36.5072, 9.1850</small>
+        </div>
+        
+        <p id="custom-location-info" style="display: none;">
+            <strong>Emplacement personnalisé</strong><br>
+            <span id="custom-lat">0</span>, <span id="custom-lng">0</span>
+        </p>
+        
+        <div class="action-buttons">
+            <button id="use-selected-location" class="btn">Utiliser</button>
+            <button id="clear-map" class="btn btn-danger">Effacer</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script>
+        var map;
+        var routingControl;
+        var restaurantLocation;
+        var userLocation = null;
+        var restaurantMarker;
+        var userMarker;
+        var customLocationMarker;
+        var selectedLocationOption;
+        var mapClickEnabled = true;
+        var searchLocations = [
+            { name: "Aéroport de Tunis-Carthage", lat: 36.8512, lng: 10.2270 },
+            { name: "Port de La Goulette", lat: 36.8183, lng: 10.3050 },
+            { name: "Université de Tunis El Manar", lat: 36.8131, lng: 10.1387 },
+            { name: "Bardo National Museum", lat: 36.8092, lng: 10.1342 },
+            { name: "Médina de Tunis", lat: 36.7988, lng: 10.1719 },
+            { name: "Parc du Belvédère", lat: 36.8142, lng: 10.1684 },
+            { name: "Sidi Bou Said", lat: 36.8698, lng: 10.3412 },
+            { name: "Avenue Habib Bourguiba", lat: 36.7993, lng: 10.1843 },
+            { name: "Cathédrale de Tunis", lat: 36.7991, lng: 10.1824 },
+            { name: "Mosquée Zitouna", lat: 36.7986, lng: 10.1711 },
+            { name: "Théâtre municipal de Tunis", lat: 36.8003, lng: 10.1842 },
+            { name: "Lac de Tunis", lat: 36.8167, lng: 10.2333 },
+            { name: "Gammarth", lat: 36.9167, lng: 10.2833 },
+            { name: "Bizerte", lat: 37.2744, lng: 9.8739 },
+            { name: "Nabeul", lat: 36.4561, lng: 10.7372 },
+            { name: "Kairouan", lat: 35.6784, lng: 10.0957 },
+            { name: "Tabarka", lat: 36.9547, lng: 8.7581 },
+            { name: "Tozeur", lat: 33.9197, lng: 8.1335 },
+            { name: "Douz", lat: 33.4667, lng: 9.0333 },
+            { name: "Matmata", lat: 33.5500, lng: 9.9667 }
+        ];
+        
+        function initMap() {
+            console.log("Initializing directions map");
+            
+            // Default center on Tunisia
+            var tunisia = [36.8065, 10.1815];
+            
+            // Create the map with reduced animations for better performance
+            map = L.map('map', {
+                zoomAnimation: false,
+                markerZoomAnimation: false,
+                fadeAnimation: false
+            }).setView(tunisia, 8);
+            
+            // Add the OpenStreetMap tiles with low-res tiles for better performance
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18,
+                minZoom: 5
+            }).addTo(map);
+            
+            // Get restaurant coordinates from JavaFX
+            try {
+                console.log("Reading restaurant data from window object");
+                var restaurantLat = parseFloat(window.restaurantLat || 0);
+                var restaurantLng = parseFloat(window.restaurantLng || 0);
+                var restaurantName = window.restaurantName || "Restaurant";
+                var restaurantAddress = window.restaurantAddress || "Adresse non disponible";
+                
+                console.log("Restaurant data:", restaurantName, restaurantAddress, restaurantLat, restaurantLng);
+                
+                // Update the info panel
+                document.getElementById('restaurant-name').textContent = restaurantName;
+                document.getElementById('restaurant-address').textContent = restaurantAddress;
+                document.getElementById('lat-display').textContent = restaurantLat.toFixed(6);
+                document.getElementById('lng-display').textContent = restaurantLng.toFixed(6);
+                
+                if (restaurantLat !== 0 && restaurantLng !== 0) {
+                    console.log("Setting restaurant location on map");
+                    restaurantLocation = [restaurantLat, restaurantLng];
+                    map.setView(restaurantLocation, 12);
+                    
+                    // Add marker for restaurant
+                    restaurantMarker = L.marker(restaurantLocation, {
+                        title: restaurantName
+                    }).addTo(map);
+                    restaurantMarker.bindPopup("<b>" + restaurantName + "</b><br>" + restaurantAddress).openPopup();
+                    
+                    console.log("Restaurant marker added at:", restaurantLat, restaurantLng);
+                } else {
+                    console.error("Invalid restaurant coordinates:", restaurantLat, restaurantLng);
+                    alert("Erreur: Coordonnées du restaurant invalides ou non définies.");
+                }
+            } catch (e) {
+                console.error("Error setting restaurant coordinates", e);
+                alert("Erreur lors du chargement des coordonnées du restaurant: " + e.message);
+            }
+            
+            // Set up location options
+            setupLocationOptions();
+            
+            // Set up map click handler for custom location
+            map.on('click', function(e) {
+                if (!mapClickEnabled) return;
+                
+                var lat = e.latlng.lat;
+                var lng = e.latlng.lng;
+                console.log("Map clicked at:", lat, lng);
+                
+                // Deselect all location options
+                var options = document.querySelectorAll('.location-option');
+                options.forEach(function(option) {
+                    option.classList.remove('selected');
+                });
+                
+                // Update custom location info
+                document.getElementById('custom-location-info').style.display = 'block';
+                document.getElementById('custom-lat').textContent = lat.toFixed(6);
+                document.getElementById('custom-lng').textContent = lng.toFixed(6);
+                
+                // Set custom location
+                setCustomLocation(lat, lng);
+            });
+            
+            // Add click listener to directions button
+            document.getElementById('get-directions').addEventListener('click', function() {
+                if (userLocation && restaurantLocation) {
+                    calculateAndDisplayRoute();
+                } else {
+                    alert("Veuillez d'abord sélectionner un emplacement de départ.");
+                }
+            });
+            
+            // Add click listener to use selected location button
+            document.getElementById('use-selected-location').addEventListener('click', function() {
+                if (selectedLocationOption) {
+                    var lat = parseFloat(selectedLocationOption.getAttribute('data-lat'));
+                    var lng = parseFloat(selectedLocationOption.getAttribute('data-lng'));
+                    setUserLocation(lat, lng, selectedLocationOption.querySelector('strong').textContent);
+                } else if (customLocationMarker) {
+                    var latlng = customLocationMarker.getLatLng();
+                    setUserLocation(latlng.lat, latlng.lng, "Emplacement personnalisé");
+                } else {
+                    alert("Veuillez sélectionner un emplacement ou cliquer sur la carte.");
+                }
+            });
+            
+            // Add click listener to current location button
+            document.getElementById('get-current-location').addEventListener('click', function() {
+                getCurrentLocation();
+            });
+            
+            // Add click listener to clear map button
+            document.getElementById('clear-map').addEventListener('click', function() {
+                clearMap();
+            });
+            
+            // Add click listener to open in Google Maps button
+            document.getElementById('open-google-maps').addEventListener('click', function() {
+                openInGoogleMaps();
+            });
+            
+            // Set default location (Tunis)
+            selectLocationOption(document.querySelector('.location-option'));
+            
+            // Set up search functionality
+            setupSearch();
+        }
+        
+        function setupSearch() {
+            var searchInput = document.getElementById('location-search');
+            var searchResults = document.getElementById('search-results');
+            
+            searchInput.addEventListener('input', function() {
+                var query = this.value.toLowerCase();
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+                
+                // Filter locations based on query
+                var results = searchLocations.filter(function(location) {
+                    return location.name.toLowerCase().includes(query);
+                });
+                
+                // Display results
+                if (results.length > 0) {
+                    searchResults.innerHTML = '';
+                    results.forEach(function(result) {
+                        var resultItem = document.createElement('div');
+                        resultItem.className = 'search-result';
+                        resultItem.textContent = result.name;
+                        resultItem.addEventListener('click', function() {
+                            // Set custom location
+                            setCustomLocation(result.lat, result.lng);
+                            // Update custom location info
+                            document.getElementById('custom-location-info').style.display = 'block';
+                            document.getElementById('custom-lat').textContent = result.lat.toFixed(6);
+                            document.getElementById('custom-lng').textContent = result.lng.toFixed(6);
+                            // Hide search results
+                            searchResults.style.display = 'none';
+                            // Clear search input
+                            searchInput.value = result.name;
+                            // Deselect all location options
+                            var options = document.querySelectorAll('.location-option');
+                            options.forEach(function(option) {
+                                option.classList.remove('selected');
+                            });
+                        });
+                        searchResults.appendChild(resultItem);
+                    });
+                    searchResults.style.display = 'block';
+                } else {
+                    searchResults.innerHTML = '<div class="search-result">Aucun résultat trouvé</div>';
+                    searchResults.style.display = 'block';
+                }
+            });
+            
+            // Hide search results when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
+                }
+            });
+        }
+        
+        function setupLocationOptions() {
+            var options = document.querySelectorAll('.location-option');
+            options.forEach(function(option) {
+                option.addEventListener('click', function() {
+                    selectLocationOption(this);
+                });
+            });
+        }
+        
+        function selectLocationOption(option) {
+            // Deselect all options
+            var options = document.querySelectorAll('.location-option');
+            options.forEach(function(opt) {
+                opt.classList.remove('selected');
+            });
+            
+            // Select clicked option
+            option.classList.add('selected');
+            selectedLocationOption = option;
+            
+            // Hide custom location info
+            document.getElementById('custom-location-info').style.display = 'none';
+            
+            // Remove custom marker if exists
+            if (customLocationMarker) {
+                map.removeLayer(customLocationMarker);
+                customLocationMarker = null;
+            }
+            
+            console.log("Location option selected:", option.querySelector('strong').textContent);
+        }
+        
+        function setCustomLocation(lat, lng) {
+            // Remove previous marker if exists
+            if (customLocationMarker) {
+                map.removeLayer(customLocationMarker);
+            }
+            
+            // Add marker for custom location
+            customLocationMarker = L.marker([lat, lng], {
+                title: "Emplacement personnalisé",
+                draggable: true
+            }).addTo(map);
+            
+            customLocationMarker.bindPopup("Emplacement personnalisé<br>" + lat.toFixed(6) + ", " + lng.toFixed(6)).openPopup();
+            
+            // Update when marker is dragged
+            customLocationMarker.on('dragend', function() {
+                var newPos = customLocationMarker.getLatLng();
+                document.getElementById('custom-lat').textContent = newPos.lat.toFixed(6);
+                document.getElementById('custom-lng').textContent = newPos.lng.toFixed(6);
+                customLocationMarker.bindPopup("Emplacement personnalisé<br>" + newPos.lat.toFixed(6) + ", " + newPos.lng.toFixed(6)).openPopup();
+            });
+            
+            selectedLocationOption = null;
+        }
+        
+        function setUserLocation(lat, lng, locationName) {
+            userLocation = [lat, lng];
+            
+            // Update status
+            document.getElementById('location-status').textContent = "Position: " + locationName;
+            document.getElementById('location-status').className = "location-status success";
+            
+            // Remove previous marker if exists
+            if (userMarker) {
+                map.removeLayer(userMarker);
+            }
+            
+            // Add marker for user location
+            userMarker = L.marker(userLocation, {
+                title: locationName
+            }).addTo(map);
+            userMarker.bindPopup(locationName).openPopup();
+            
+            // Fit bounds to include both markers
+            if (restaurantLocation) {
+                var bounds = L.latLngBounds(restaurantLocation, userLocation);
+                map.fitBounds(bounds);
+            }
+            
+            console.log("User location set to:", lat, lng, locationName);
+        }
+        
+        function getCurrentLocation() {
+            document.getElementById('location-status').textContent = "Recherche de votre position...";
+            document.getElementById('location-status').className = "location-status";
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        console.log("Got user location:", position.coords.latitude, position.coords.longitude);
+                        
+                        // Deselect all options
+                        var options = document.querySelectorAll('.location-option');
+                        options.forEach(function(opt) {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Hide custom location info
+                        document.getElementById('custom-location-info').style.display = 'none';
+                        
+                        // Remove custom marker if exists
+                        if (customLocationMarker) {
+                            map.removeLayer(customLocationMarker);
+                            customLocationMarker = null;
+                        }
+                        
+                        // Set user location
+                        setUserLocation(
+                            position.coords.latitude, 
+                            position.coords.longitude, 
+                            "Ma position actuelle"
+                        );
+                    },
+                    function(error) {
+                        console.error("Error getting user location:", error);
+                        var errorMessage = "Impossible de déterminer votre position. ";
+                        
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage += "Vous avez refusé l'accès à votre position.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage += "Les informations de position ne sont pas disponibles.";
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage += "La demande de position a expiré.";
+                                break;
+                            case error.UNKNOWN_ERROR:
+                                errorMessage += "Une erreur inconnue s'est produite.";
+                                break;
+                        }
+                        
+                        document.getElementById('location-status').textContent = errorMessage + " Utilisez une position prédéfinie ou cliquez sur la carte.";
+                        document.getElementById('location-status').className = "location-status error";
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                document.getElementById('location-status').textContent = "La géolocalisation n'est pas prise en charge par votre navigateur. Utilisez une position prédéfinie ou cliquez sur la carte.";
+                document.getElementById('location-status').className = "location-status error";
+            }
+        }
+        
+        function calculateAndDisplayRoute() {
+            if (!userLocation || !restaurantLocation) {
+                console.error("Cannot calculate route: missing locations");
+                return;
+            }
+            
+            console.log("Calculating route from", userLocation, "to", restaurantLocation);
+            
+            // Disable map clicks during routing
+            mapClickEnabled = false;
+            
+            // Remove previous routing control if it exists
+            if (routingControl) {
+                map.removeControl(routingControl);
+            }
+            
+            // Show loading message
+            document.getElementById('location-status').textContent = "Calcul de l'itinéraire...";
+            
+            try {
+                // Create new routing control with performance optimizations
+                routingControl = L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLocation[0], userLocation[1]),
+                        L.latLng(restaurantLocation[0], restaurantLocation[1])
+                    ],
+                    routeWhileDragging: false,
+                    showAlternatives: false,
+                    fitSelectedRoutes: true,
+                    language: 'fr',
+                    lineOptions: {
+                        styles: [
+                            {color: '#3498db', opacity: 0.8, weight: 6},
+                            {color: 'white', opacity: 0.3, weight: 4}
+                        ]
+                    },
+                    createMarker: function() { return null; } // Don't create additional markers
+                }).addTo(map);
+                
+                // Handle route calculation success
+                routingControl.on('routesfound', function(e) {
+                    console.log("Routes found:", e.routes);
+                    var route = e.routes[0];
+                    var distance = (route.summary.totalDistance / 1000).toFixed(2);
+                    var duration = Math.round(route.summary.totalTime / 60);
+                    
+                    // Display route information
+                    document.getElementById('route-distance').textContent = distance;
+                    document.getElementById('route-duration').textContent = duration;
+                    document.getElementById('route-info').style.display = 'block';
+                    
+                    // Update status
+                    document.getElementById('location-status').textContent = "Itinéraire calculé!";
+                    document.getElementById('location-status').className = "location-status success";
+                    
+                    // Re-enable map clicks
+                    mapClickEnabled = true;
+                    
+                    console.log("Route displayed, distance:", distance, "km, duration:", duration, "min");
+                });
+                
+                // Handle route calculation error
+                routingControl.on('routingerror', function(e) {
+                    console.error("Routing error:", e.error);
+                    
+                    // Update status
+                    document.getElementById('location-status').textContent = "Erreur lors du calcul de l'itinéraire. Essayez un autre point de départ.";
+                    document.getElementById('location-status').className = "location-status error";
+                    
+                    // Re-enable map clicks
+                    mapClickEnabled = true;
+                    
+                    // Fall back to straight line if routing fails
+                    showStraightLineRoute();
+                });
+            } catch (e) {
+                console.error("Error setting up routing:", e);
+                
+                // Update status
+                document.getElementById('location-status').textContent = "Erreur lors du calcul de l'itinéraire: " + e.message;
+                document.getElementById('location-status').className = "location-status error";
+                
+                // Re-enable map clicks
+                mapClickEnabled = true;
+                
+                // Fall back to straight line if routing fails
+                showStraightLineRoute();
+            }
+        }
+        
+        function showStraightLineRoute() {
+            // Draw a simple line between the two points as a fallback
+            var polyline = L.polyline([userLocation, restaurantLocation], {
+                color: '#3498db',
+                weight: 5,
+                opacity: 0.7,
+                dashArray: '10, 10'
+            }).addTo(map);
+            
+            // Calculate straight-line distance (in kilometers)
+            var distance = calculateDistance(
+                userLocation[0], userLocation[1],
+                restaurantLocation[0], restaurantLocation[1]
+            );
+            
+            // Estimate duration (assuming average speed of 50 km/h)
+            var durationMinutes = Math.round((distance / 50) * 60);
+            
+            // Display route information
+            document.getElementById('route-distance').textContent = distance.toFixed(2) + " (à vol d'oiseau)";
+            document.getElementById('route-duration').textContent = durationMinutes + " (estimation)";
+            document.getElementById('route-info').style.display = 'block';
+            
+            // Fit the map to show the entire route
+            var bounds = L.latLngBounds(userLocation, restaurantLocation);
+            map.fitBounds(bounds, {
+                padding: [50, 50]
+            });
+        }
+        
+        // Calculate distance between two points using the Haversine formula
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2 - lat1);
+            var dLon = deg2rad(lon2 - lon1);
+            var a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var d = R * c; // Distance in km
+            return d;
+        }
+        
+        function deg2rad(deg) {
+            return deg * (Math.PI/180);
+        }
+        
+        function clearMap() {
+            // Remove user marker
+            if (userMarker) {
+                map.removeLayer(userMarker);
+                userMarker = null;
+            }
+            
+            // Remove custom marker
+            if (customLocationMarker) {
+                map.removeLayer(customLocationMarker);
+                customLocationMarker = null;
+            }
+            
+            // Remove routing
+            if (routingControl) {
+                map.removeControl(routingControl);
+                routingControl = null;
+            }
+            
+            // Reset user location
+            userLocation = null;
+            
+            // Reset location status
+            document.getElementById('location-status').textContent = "Statut de localisation: En attente...";
+            document.getElementById('location-status').className = "location-status";
+            
+            // Hide route info
+            document.getElementById('route-info').style.display = 'none';
+            
+            // Reset search input
+            document.getElementById('location-search').value = '';
+            
+            // Hide custom location info
+            document.getElementById('custom-location-info').style.display = 'none';
+            
+            // Deselect all location options
+            var options = document.querySelectorAll('.location-option');
+            options.forEach(function(option) {
+                option.classList.remove('selected');
+            });
+            
+            // Select default location option
+            selectLocationOption(document.querySelector('.location-option'));
+            
+            // Re-enable map clicks
+            mapClickEnabled = true;
+            
+            // Center map on restaurant
+            if (restaurantLocation) {
+                map.setView(restaurantLocation, 12);
+            }
+            
+            console.log("Map cleared");
+        }
+        
+        function openInGoogleMaps() {
+            if (!restaurantLocation) {
+                alert("Erreur: Coordonnées du restaurant non définies");
+                return;
+            }
+            
+            // Create Google Maps URL
+            var googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=" + 
+                restaurantLocation[0] + "," + restaurantLocation[1];
+            
+            // Open in new tab/window
+            window.open(googleMapsUrl, '_blank');
+        }
+        
+        // Initialize the map when the page loads
+        window.onload = function() {
+            console.log("Window loaded, initializing map");
+            setTimeout(initMap, 500); // Small delay to ensure window object is fully initialized
+        };
+    </script>
+</body>
+</html>
