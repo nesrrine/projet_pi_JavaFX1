@@ -24,6 +24,30 @@
                     <Insets bottom="20.0"/>
                 </VBox.margin>
             </Label>
+            
+            <!-- Filtres -->
+            <HBox spacing="15" alignment="CENTER">
+                <VBox.margin>
+                    <Insets bottom="15.0"/>
+                </VBox.margin>
+                
+                <!-- Filtre par prix -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Prix maximum:" style="-fx-font-size: 14px;"/>
+                    <Slider fx:id="prixSlider" min="0" max="200" value="200" 
+                            showTickLabels="true" showTickMarks="true" 
+                            majorTickUnit="50" minorTickCount="4"
+                            prefWidth="200"/>
+                    <Label fx:id="prixLabel" text="200 TND" style="-fx-font-size: 14px;"/>
+                </HBox>
+                
+                <Button fx:id="filtrerButton" text="Filtrer" 
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 15;"/>
+                
+                <Button fx:id="resetButton" text="Réinitialiser" 
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 15;"/>
+            </HBox>
+            
         <FlowPane fx:id="restaurantContainer"
                   hgap="20" vgap="20"
                   alignment="TOP_LEFT"

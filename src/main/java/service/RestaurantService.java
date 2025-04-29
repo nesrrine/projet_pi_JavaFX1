@@ -29,6 +29,14 @@ public class RestaurantService {
         restaurant.setImage1(rs.getString("image1"));
         restaurant.setImage2(rs.getString("image2"));
         restaurant.setUserId(rs.getInt("user_id"));
+        
+        // Handle promotion field (with default false if column doesn't exist)
+        try {
+            restaurant.setPromotion(rs.getBoolean("promotion"));
+        } catch (SQLException e) {
+            restaurant.setPromotion(false);
+        }
+        
         return restaurant;
     }
 
@@ -38,8 +46,8 @@ public class RestaurantService {
             throw new SQLException("User does not exist");
         }
 
-        String sql = "INSERT INTO restaurant (nom, localisation, image, description, prix, lat, lng, image1, image2, user_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO restaurant (nom, localisation, image, description, prix, lat, lng, image1, image2, user_id, promotion) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, restaurant.getNom());
@@ -52,6 +60,7 @@ public class RestaurantService {
             ps.setString(8, restaurant.getImage1());
             ps.setString(9, restaurant.getImage2());
             ps.setInt(10, restaurant.getUserId());
+            ps.setBoolean(11, restaurant.isPromotion());
 
             System.out.println("Adding restaurant with user_id: " + restaurant.getUserId()); // Debug log
 
@@ -108,7 +117,7 @@ public class RestaurantService {
         }
 
         String sql = "UPDATE restaurant SET nom = ?, localisation = ?, image = ?, description = ?, " +
-                "prix = ?, lat = ?, lng = ?, image1 = ?, image2 = ?, user_id = ? WHERE id = ?";
+                "prix = ?, lat = ?, lng = ?, image1 = ?, image2 = ?, user_id = ?, promotion = ? WHERE id = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, restaurant.getNom());
@@ -121,7 +130,8 @@ public class RestaurantService {
             ps.setString(8, restaurant.getImage1());
             ps.setString(9, restaurant.getImage2());
             ps.setInt(10, restaurant.getUserId());
-            ps.setInt(11, restaurant.getId());
+            ps.setBoolean(11, restaurant.isPromotion());
+            ps.setInt(12, restaurant.getId());
 
             ps.executeUpdate();
         }
@@ -155,6 +165,46 @@ public class RestaurantService {
             }
         }
         return restaurants;
+    }
+
+    // Get restaurants with promotion
+    public List<Restaurant> getRestaurantsWithPromotion() throws SQLException {
+        List<Restaurant> restaurants = new ArrayList<>();
+        String sql = "SELECT * FROM restaurant WHERE promotion = TRUE";
+
+        try (Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                restaurants.add(mapResultSetToRestaurant(rs));
+            }
+        }
+
+        return restaurants;
+    }
+    
+    // Toggle promotion status
+    public void togglePromotion(int restaurantId, boolean promotionStatus) throws SQLException {
+        String sql = "UPDATE restaurant SET promotion = ? WHERE id = ?";
+        
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setBoolean(1, promotionStatus);
+            ps.setInt(2, restaurantId);
+            ps.executeUpdate();
+        }
+    }
+    
+    // Get highest restaurant price
+    public double getHighestRestaurantPrice() throws SQLException {
+        String sql = "SELECT MAX(prix) FROM restaurant";
+        
+        try (Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        }
+        
+        return 100.0; // Default value if no restaurants exist
     }
 
     // Verify if user exists

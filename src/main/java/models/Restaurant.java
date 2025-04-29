@@ -12,9 +12,24 @@ public class Restaurant {
     private String image1;
     private String image2;
     private int userId;
+    private boolean promotion;
 
     // Constructeurs
     public Restaurant() {
+    }
+
+    public Restaurant(String nom, String localisation, String image, String description, double prix, double lat, double lng, String image1, String image2, int userId, boolean promotion) {
+        this.nom = nom;
+        this.localisation = localisation;
+        this.image = image;
+        this.description = description;
+        this.prix = prix;
+        this.lat = lat;
+        this.lng = lng;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.userId = userId;
+        this.promotion = promotion;
     }
 
     public Restaurant(String nom, String localisation, String image, String description, double prix, double lat, double lng, String image1, String image2, int userId) {
@@ -28,6 +43,7 @@ public class Restaurant {
         this.image1 = image1;
         this.image2 = image2;
         this.userId = userId;
+        this.promotion = false;
     }
 
     public int getId() {
@@ -117,6 +133,14 @@ public class Restaurant {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+    
+    public boolean isPromotion() {
+        return promotion;
+    }
+    
+    public void setPromotion(boolean promotion) {
+        this.promotion = promotion;
+    }
 
     @Override
     public String toString() {
@@ -132,6 +156,7 @@ public class Restaurant {
                 ", image1='" + image1 + '\'' +
                 ", image2='" + image2 + '\'' +
                 ", userId=" + userId +
+                ", promotion=" + promotion +
                 '}';
     }
 }
