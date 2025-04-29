@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Location Picker</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 999;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            max-width: 300px;
+        }
+        #confirmButton {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            width: 100%;
+        }
+        #confirmButton:hover {
+            background-color: #27ae60;
+        }
+        .coordinate-value {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        /* Hidden fields for communication with Java */
+        .hidden-field {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="info">
+        <h3 style="margin-top: 0; color: #3498db;">Sélection de l'emplacement</h3>
+        <p>Cliquez sur la carte pour sélectionner l'emplacement du restaurant</p>
+        <p>Latitude: <span id="lat" class="coordinate-value">0</span></p>
+        <p>Longitude: <span id="lng" class="coordinate-value">0</span></p>
+        <button id="confirmButton">Confirmer cette position</button>
+    </div>
+    
+    <!-- Hidden fields for communication with Java -->
+    <input type="hidden" id="selectedLat" class="hidden-field" value="0">
+    <input type="hidden" id="selectedLng" class="hidden-field" value="0">
+    <input type="hidden" id="locationConfirmed" class="hidden-field" value="false">
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map;
+        var marker;
+        
+        function initMap() {
+            // Default center on Tunisia
+            var tunisia = [36.8065, 10.1815];
+            
+            // Create the map
+            map = L.map('map').setView(tunisia, 7);
+            
+            // Add the OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Try to get user's current location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = [position.coords.latitude, position.coords.longitude];
+                    map.setView(pos, 13);
+                });
+            }
+            
+            // Check if we have initial coordinates from JavaFX
+            try {
+                var initialLat = parseFloat(window.initialLat || 0);
+                var initialLng = parseFloat(window.initialLng || 0);
+                
+                console.log("Initial coordinates:", initialLat, initialLng);
+                
+                if (initialLat !== 0 && initialLng !== 0) {
+                    var initialPos = [initialLat, initialLng];
+                    map.setView(initialPos, 15);
+                    placeMarker(initialPos);
+                    updateCoordinates({lat: initialLat, lng: initialLng});
+                }
+            } catch (e) {
+                console.error("Error setting initial coordinates", e);
+            }
+            
+            // Add click listener to map
+            map.on('click', function(e) {
+                placeMarker([e.latlng.lat, e.latlng.lng]);
+                updateCoordinates(e.latlng);
+                console.log("Map clicked at:", e.latlng.lat, e.latlng.lng);
+            });
+            
+            // Add click listener to confirm button
+            document.getElementById('confirmButton').addEventListener('click', function() {
+                if (marker) {
+                    var position = marker.getLatLng();
+                    console.log("Confirming position:", position.lat, position.lng);
+                    
+                    // Update hidden fields for Java to read
+                    document.getElementById('selectedLat').value = position.lat;
+                    document.getElementById('selectedLng').value = position.lng;
+                    document.getElementById('locationConfirmed').value = "true";
+                    
+                    // Show confirmation alert
+                    alert("Position confirmée! Latitude: " + position.lat.toFixed(6) + ", Longitude: " + position.lng.toFixed(6));
+                } else {
+                    alert("Veuillez sélectionner un emplacement sur la carte d'abord.");
+                }
+            });
+        }
+        
+        function placeMarker(location) {
+            if (marker) {
+                marker.setLatLng(location);
+            } else {
+                marker = L.marker(location, {draggable: true}).addTo(map);
+                
+                // Add drag listener to marker
+                marker.on('dragend', function() {
+                    var position = marker.getLatLng();
+                    updateCoordinates(position);
+                    console.log("Marker dragged to:", position.lat, position.lng);
+                });
+            }
+        }
+        
+        function updateCoordinates(location) {
+            document.getElementById('lat').textContent = location.lat.toFixed(6);
+            document.getElementById('lng').textContent = location.lng.toFixed(6);
+            
+            // Also update hidden fields
+            document.getElementById('selectedLat').value = location.lat;
+            document.getElementById('selectedLng').value = location.lng;
+        }
+        
+        // Initialize the map when the page loads
+        window.onload = initMap;
+    </script>
+</body>
+</html>

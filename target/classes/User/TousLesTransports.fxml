@@ -21,9 +21,24 @@
                    alignment="CENTER"
                    maxWidth="Infinity">
                 <VBox.margin>
-                    <Insets bottom="20.0"/>
+                    <Insets bottom="10.0"/>
                 </VBox.margin>
             </Label>
+            
+            <!-- Filter section -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Filtrer par type:" style="-fx-font-size: 14px;"/>
+                <ComboBox fx:id="typeFilterComboBox" prefWidth="200" promptText="Tous les types">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </ComboBox>
+                <Button fx:id="resetFilterButton" text="Réinitialiser" 
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <VBox.margin>
+                    <Insets bottom="20.0"/>
+                </VBox.margin>
+            </HBox>
 
             <FlowPane fx:id="transportContainer"
                       hgap="20" vgap="20"
