@@ -32,6 +32,13 @@ public class UserInterfaceController {
         if (currentUser != null && "Voyageur".equals(currentUser.getRole())) {
             // Parcourir tous les menus
             for (Menu menu : menuBar.getMenus()) {
+                String menuText = menu.getText();
+                
+                // Allow access to Réclamations menu for Voyageurs
+                if ("Réclamations".equals(menuText)) {
+                    continue; // Skip filtering this menu
+                }
+                
                 // Pour chaque menu, parcourir ses items
                 menu.getItems().removeIf(item -> {
                     String text = item.getText();
@@ -83,13 +90,13 @@ public class UserInterfaceController {
 
     @FXML
     private void handleMyReclamations() {
-        if (checkVoyageurAccess()) return;
+        // Allow Voyageurs to access their reclamations
         loadPartial("/user/MesReclamations.fxml");
     }
 
     @FXML
     private void handleCreateReclamation() {
-        if (checkVoyageurAccess()) return;
+        // Allow Voyageurs to create reclamations
         loadPartial("/user/CreateReclamation.fxml");
     }
 
