@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.ReservationController">
+    <VBox spacing="10" alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Ajout d'une Réservation" style="-fx-font-size: 18px;"/>
+
+        <!-- Formulaire -->
+        <GridPane hgap="10" vgap="5">
+            <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfTitre" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label fx:id="labelTitre" style="-fx-text-fill: red;" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Date Début:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dpDateDebut" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label fx:id="labelDateDebut" style="-fx-text-fill: red;" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Date Fin:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dpDateFin" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label fx:id="labelDateFin" style="-fx-text-fill: red;" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <Label text="Statut:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfStatut" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label fx:id="labelStatut" style="-fx-text-fill: red;" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- Boutons -->
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="btnAjouter" text="Ajouter" onAction="#ajouterReservation"/>
+            <Button fx:id="btnReset" text="Réinitialiser" onAction="#resetForm"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

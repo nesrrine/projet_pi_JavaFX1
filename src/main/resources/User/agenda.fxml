@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.time.LocalDate?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.User.AgendaController" prefHeight="500.0" prefWidth="600.0">
+    <!-- Conteneur VBox pour organiser les éléments de manière verticale avec padding et fond subtil -->
+    <VBox spacing="15" layoutX="10.0" layoutY="10.0" style="-fx-background-color: #f5f5f5; -fx-padding: 15px;">
+        <!-- Label pour afficher le mois et l'année avec une police améliorée et couleur moderne -->
+        <Label fx:id="lblMonthYear" text="Mois: Janvier 2025" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #34495e;" />
+
+        <!-- DatePicker pour sélectionner un mois avec un style moderne et plus d'interactivité -->
+        <DatePicker fx:id="dpSelectMonth" layoutX="10.0" layoutY="10.0"
+                    style="-fx-pref-width: 220px; -fx-font-size: 16px; -fx-background-color: #ecf0f1; -fx-border-radius: 5px;
+                           -fx-border-color: #34495e; -fx-padding: 8px;" />
+    </VBox>
+
+    <!-- GridPane pour afficher les jours du mois avec des bordures et un design plus aéré -->
+    <GridPane fx:id="calendarGrid" layoutX="10.0" layoutY="90.0" hgap="12.0" vgap="12.0" style="-fx-border-color: #34495e; -fx-border-width: 2px;
+                           -fx-background-color: #ffffff; -fx-padding: 15px; -fx-effect: dropshadow(gaussian, #bdc3c7, 10, 0.5, 0, 0);" />
+
+    <!-- Style de fond général avec padding -->
+    <AnchorPane style="-fx-background-color: #ffffff; -fx-padding: 20px;" />
+</AnchorPane>
