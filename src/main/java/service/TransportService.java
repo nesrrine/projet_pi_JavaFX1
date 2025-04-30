@@ -151,6 +151,40 @@ public class TransportService {
         return transports;
     }
 
+    // READ - Récupérer les transports par type
+    public List<Transport> getTransportsByType(String type) throws SQLException {
+        List<Transport> transports = new ArrayList<>();
+        String sql = "SELECT * FROM transport WHERE type = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, type);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    transports.add(mapResultSetToTransport(rs));
+                }
+            }
+        }
+        
+        return transports;
+    }
+
+    // Get unique transport types
+    public List<String> getAllTransportTypes() throws SQLException {
+        List<String> types = new ArrayList<>();
+        String sql = "SELECT DISTINCT type FROM transport ORDER BY type";
+        
+        try (Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                types.add(rs.getString("type"));
+            }
+        }
+        
+        return types;
+    }
+
     // Verify if user exists
     public boolean verifyUserExists(int userId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM users WHERE id = ?";

@@ -8,10 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Transport;
 import models.User;
+import service.TransportReservationService;
 import service.TransportService;
 import service.UserService;
 import utils.Session;
@@ -19,17 +21,62 @@ import utils.Session;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
 public class TousLesTransportsController {
 
     @FXML private FlowPane transportContainer;
+    @FXML private ComboBox<String> typeFilterComboBox;
+    @FXML private Button resetFilterButton;
 
     private final TransportService transportService = new TransportService();
     private final UserService userService = new UserService();
+    private final TransportReservationService reservationService = new TransportReservationService();
 
     @FXML
     public void initialize() {
+        // Create the reservation table if it doesn't exist
+        try {
+            reservationService.createTableIfNotExists();
+        } catch (SQLException e) {
+            System.err.println("Error creating reservation table: " + e.getMessage());
+        }
+        
+        setupTypeFilter();
         loadTransports();
+        
+        // Set up reset filter button
+        resetFilterButton.setOnAction(e -> {
+            typeFilterComboBox.getSelectionModel().clearSelection();
+            loadTransports();
+        });
+    }
+    
+    private void setupTypeFilter() {
+        try {
+            // Add "Tous les types" option
+            typeFilterComboBox.getItems().add("Tous les types");
+            
+            // Add all available transport types from database
+            typeFilterComboBox.getItems().addAll(transportService.getAllTransportTypes());
+            
+            // Select "Tous les types" by default
+            typeFilterComboBox.getSelectionModel().selectFirst();
+            
+            // Add listener for selection changes
+            typeFilterComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    if (newVal.equals("Tous les types")) {
+                        loadTransports();
+                    } else {
+                        loadTransportsByType(newVal);
+                    }
+                }
+            });
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur lors du chargement des types de véhicules: " + e.getMessage());
+        }
     }
 
     private void loadTransports() {
@@ -43,6 +90,28 @@ public class TousLesTransportsController {
             }
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur lors du chargement des transports: " + e.getMessage());
+        }
+    }
+    
+    private void loadTransportsByType(String type) {
+        try {
+            User currentUser = Session.getCurrentUser();
+            transportContainer.getChildren().clear();
+            
+            List<Transport> filteredTransports = transportService.getTransportsByType(type);
+            
+            if (filteredTransports.isEmpty()) {
+                Label noResultsLabel = new Label("Aucun véhicule de type '" + type + "' trouvé");
+                noResultsLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666;");
+                transportContainer.getChildren().add(noResultsLabel);
+            } else {
+                for (Transport transport : filteredTransports) {
+                    VBox card = createTransportCard(transport, currentUser);
+                    transportContainer.getChildren().add(card);
+                }
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur lors du filtrage des transports: " + e.getMessage());
         }
     }
 
@@ -85,10 +154,47 @@ public class TousLesTransportsController {
             }
         }
 
+        // Check if transport is available today
+        boolean isAvailableToday = true;
+        try {
+            isAvailableToday = !reservationService.isTransportReservedOnDate(transport.getId(), LocalDate.now());
+        } catch (SQLException e) {
+            System.err.println("Error checking transport availability: " + e.getMessage());
+        }
+        
+        // Availability indicator
+        HBox availabilityBox = new HBox(5);
+        availabilityBox.setStyle("-fx-alignment: center-left;");
+        
+        Circle statusCircle = new Circle(6);
+        statusCircle.setStyle(isAvailableToday ? 
+            "-fx-fill: #2ecc71;" : // Green for available
+            "-fx-fill: #e74c3c;"   // Red for unavailable
+        );
+        
+        Label statusLabel = new Label(isAvailableToday ? 
+            "Disponible aujourd'hui" : 
+            "Réservé aujourd'hui"
+        );
+        statusLabel.setStyle(isAvailableToday ? 
+            "-fx-text-fill: #2ecc71; -fx-font-weight: bold;" : 
+            "-fx-text-fill: #e74c3c; -fx-font-weight: bold;"
+        );
+        
+        availabilityBox.getChildren().addAll(statusCircle, statusLabel);
+
         // Réserver button
         Button reserverButton = new Button("Réserver");
         reserverButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; " +
                               "-fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;");
+        
+        if (!isAvailableToday) {
+            reserverButton.setDisable(true);
+            reserverButton.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white;");
+            Tooltip tooltip = new Tooltip("Ce véhicule est réservé aujourd'hui");
+            Tooltip.install(reserverButton, tooltip);
+        }
+        
         reserverButton.setOnAction(e -> openReservationWindow(transport));
 
         // Edit/Delete buttons for owner
@@ -106,9 +212,9 @@ public class TousLesTransportsController {
             HBox buttonsBox = new HBox(10);
             buttonsBox.setStyle("-fx-alignment: center;");
             buttonsBox.getChildren().addAll(reserverButton, editBtn, deleteBtn);
-            card.getChildren().addAll(imageView, typeLabel, ownerLabel, descriptionLabel, prixLabel, buttonsBox);
+            card.getChildren().addAll(imageView, typeLabel, ownerLabel, descriptionLabel, prixLabel, availabilityBox, buttonsBox);
         } else {
-            card.getChildren().addAll(imageView, typeLabel, ownerLabel, descriptionLabel, prixLabel, reserverButton);
+            card.getChildren().addAll(imageView, typeLabel, ownerLabel, descriptionLabel, prixLabel, availabilityBox, reserverButton);
         }
 
         return card;
@@ -122,13 +228,18 @@ public class TousLesTransportsController {
             Stage stage = new Stage();
             stage.setTitle("Réservation de Transport");
             stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
             
             ReservationTransportController controller = loader.getController();
             controller.setTransport(transport);
             
-            stage.show();
+            stage.showAndWait();
+            
+            // Refresh the transport list after reservation
+            loadTransports();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur lors de l'ouverture du formulaire de réservation: " + e.getMessage());
         }
     }
 
