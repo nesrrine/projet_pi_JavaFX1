@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<ScrollPane fx:id="transportScrollPane"
+            fitToWidth="true"
+            style="-fx-background-color:transparent;"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21.0.2"
+            fx:controller="controllers.User.TousLesTransportsController">
+
+    <content>
+        <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 20;">
+            <!-- Titre centré -->
+            <Label text="Liste des voitures"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 0 0 20 0;"
+                   alignment="CENTER"
+                   maxWidth="Infinity">
+                <VBox.margin>
+                    <Insets bottom="20.0"/>
+                </VBox.margin>
+            </Label>
+
+            <FlowPane fx:id="transportContainer"
+                      hgap="20" vgap="20"
+                      alignment="CENTER"
+                      prefWrapLength="700"/>
+        </VBox>
+    </content>
+</ScrollPane>

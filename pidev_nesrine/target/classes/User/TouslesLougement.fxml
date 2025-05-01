@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.User.TousLesLogementsController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <TableView fx:id="tableLogement" layoutX="25.0" layoutY="25.0"
+               prefWidth="550.0" prefHeight="350.0">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50.0"/>
+            <TableColumn fx:id="colTitre" text="Titre" prefWidth="120.0"/>
+            <TableColumn fx:id="colDescription" text="Description" prefWidth="150.0"/>
+            <TableColumn fx:id="colLocalisation" text="Localisation" prefWidth="120.0"/>
+            <TableColumn fx:id="colPrix" text="Prix (€)" prefWidth="80.0"/>
+            <TableColumn fx:id="colReserver" text="Réserver" prefWidth="100.0"/>
+        </columns>
+    </TableView>
+
+</AnchorPane>

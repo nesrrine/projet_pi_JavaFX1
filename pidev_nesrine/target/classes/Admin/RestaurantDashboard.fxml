@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Admin.RestaurantController">
+   <children>
+      <StackPane prefHeight="750.0" prefWidth="1200.0" >
+         <children>
+            <AnchorPane prefHeight="766.0" prefWidth="1203.0">
+               <children>
+                  <AnchorPane prefHeight="750.0" prefWidth="1205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-104.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane layoutY="1.0" prefHeight="749.0" prefWidth="260.0">
+                           <!-- Menu latéral inchangé -->
+                        </AnchorPane>
+                        <AnchorPane layoutX="265.0" layoutY="21.0" prefHeight="722.0" prefWidth="930.0">
+                           <children>
+                              <AnchorPane prefHeight="722.0" prefWidth="930.0">
+                                 <children>
+                                    <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="691.0" prefWidth="485.0" styleClass="white-bg shadow">
+                                       <children>
+                                          <!-- Formulaire -->
+                                          <Label layoutX="50.0" layoutY="30.0" text="Nom" />
+                                          <TextField fx:id="nom" layoutX="150.0" layoutY="25.0" prefWidth="300.0" />
+
+                                          <Label layoutX="50.0" layoutY="70.0" text="Localisation" />
+                                          <TextField fx:id="localisation" layoutX="150.0" layoutY="65.0" prefWidth="300.0" />
+
+                                          <Label layoutX="50.0" layoutY="110.0" text="Description" />
+                                          <TextField fx:id="description" layoutX="150.0" layoutY="105.0" prefWidth="300.0" />
+
+                                          <Label layoutX="50.0" layoutY="150.0" text="Prix moyen" />
+                                          <TextField fx:id="prix" layoutX="150.0" layoutY="145.0" prefWidth="100.0" />
+
+                                          <Label layoutX="50.0" layoutY="190.0" text="Latitude" />
+                                          <TextField fx:id="lat" layoutX="150.0" layoutY="185.0" prefWidth="100.0" />
+
+                                          <Label layoutX="260.0" layoutY="190.0" text="Longitude" />
+                                          <TextField fx:id="log" layoutX="350.0" layoutY="185.0" prefWidth="100.0" />
+
+                                          <!-- Images -->
+                                          <Label layoutX="50.0" layoutY="230.0" text="Image principale" />
+                                          <Button fx:id="Import_btn" layoutX="150.0" layoutY="225.0" text="Importer" onAction="#Import" />
+                                          <ImageView fx:id="image_id" fitHeight="100.0" fitWidth="100.0" layoutX="250.0" layoutY="225.0" />
+
+                                          <Label layoutX="50.0" layoutY="350.0" text="Image 2" />
+                                          <Button fx:id="Import_btn1" layoutX="150.0" layoutY="345.0" text="Importer" onAction="#Import1" />
+                                          <ImageView fx:id="image1_id" fitHeight="100.0" fitWidth="100.0" layoutX="250.0" layoutY="345.0" />
+
+                                          <Label layoutX="50.0" layoutY="470.0" text="Image 3" />
+                                          <Button fx:id="Import_btn2" layoutX="150.0" layoutY="465.0" text="Importer" onAction="#Import2" />
+                                          <ImageView fx:id="image2_id" fitHeight="100.0" fitWidth="100.0" layoutX="250.0" layoutY="465.0" />
+
+                                          <!-- Boutons CRUD -->
+                                          <Button fx:id="aj" layoutX="50.0" layoutY="600.0" text="Ajouter" onAction="#ajt" styleClass="add-btn" />
+                                          <Button fx:id="moditr" layoutX="180.0" layoutY="600.0" text="Modifier" onAction="#moditr" styleClass="update-btn" />
+                                          <Button fx:id="supptr" layoutX="310.0" layoutY="600.0" text="Supprimer" onAction="#supptr" styleClass="delete-btn" />
+                                       </children>
+                                    </AnchorPane>
+
+                                    <!-- Liste -->
+                                    <AnchorPane layoutX="514.0" layoutY="10.0" prefHeight="699.0" prefWidth="416.0" styleClass="white-bg shadow">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="14.0" style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Liste des Restaurants" />
+                                          <ListView fx:id="listRestaurant" layoutX="4.0" layoutY="42.0" prefHeight="647.0" prefWidth="408.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

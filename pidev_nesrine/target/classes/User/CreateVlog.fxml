@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21.0.2"
+            fx:controller="controllers.User.CreateVlogController"
+            prefWidth="600" prefHeight="400"
+            stylesheets="@/styles/style.css">
+    <children>
+        <VBox spacing="15" alignment="TOP_CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+            <Label text="Créer / Modifier un Vlog" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+            <TextArea fx:id="contentField" promptText="Contenu du vlog..." wrapText="true" prefHeight="100" />
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Choisir Image" onAction="#handleChooseImage" />
+                <Label fx:id="imageLabel" text="Aucune image" />
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Choisir Vidéo" onAction="#handleChooseVideo" />
+                <Label fx:id="videoLabel" text="Aucune vidéo" />
+            </HBox>
+
+            <Button fx:id="submitButton" text="Enregistrer"
+                    onAction="#handleSubmit"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 10;" />
+        </VBox>
+    </children>
+</AnchorPane>
