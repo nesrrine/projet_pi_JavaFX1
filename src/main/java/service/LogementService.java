@@ -5,7 +5,9 @@ import utils.MyDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LogementService implements IService<Logement> {
 
@@ -45,6 +47,26 @@ public class LogementService implements IService<Logement> {
             System.err.println("Erreur lors de la mise à jour du logement : " + e.getMessage());
         }
     }
+
+    public Map<String, Integer> getCountByLocalisation() {
+        Map<String, Integer> map = new HashMap<>();
+        String sql = "SELECT localisation, COUNT(*) as count FROM logement GROUP BY localisation";
+
+        try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                map.put(rs.getString("localisation"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des statistiques : " + e.getMessage());
+        }
+
+        return map;
+    }
+
+
+
+
+
 
     @Override
     public void delete(int id) {

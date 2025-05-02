@@ -29,20 +29,10 @@ public class UserService {
             ps.setDate(7, Date.valueOf(user.getBirthDate()));
             ps.setString(8, user.getRole());
             ps.executeUpdate();
-<<<<<<< HEAD
-        } catch (SQLException e) {
-            System.err.println("Error signing up user: " + e.getMessage());
-=======
-<<<<<<< HEAD
             System.out.println("User signed up successfully"); // Debug log
         } catch (SQLException e) {
             System.err.println("Error signing up user: " + e.getMessage());
             e.printStackTrace(); // Debug log
-=======
-        } catch (SQLException e) {
-            System.err.println("Error signing up user: " + e.getMessage());
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         }
     }
 
@@ -53,9 +43,6 @@ public class UserService {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String hashedPassword = rs.getString("password");
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
                 boolean match = BCrypt.checkpw(password, hashedPassword);
                 System.out.println("Login attempt for email: " + email + ", password match: " + match); // Debug log
                 return match;
@@ -63,23 +50,10 @@ public class UserService {
         } catch (SQLException e) {
             System.err.println("Error logging in user: " + e.getMessage());
             e.printStackTrace(); // Debug log
-=======
->>>>>>> Ons
-                return BCrypt.checkpw(password, hashedPassword);
-            }
-        } catch (SQLException e) {
-            System.err.println("Error logging in user: " + e.getMessage());
-<<<<<<< HEAD
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         }
         return false;
     }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
     public User getByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -108,9 +82,6 @@ public class UserService {
         return null;
     }
 
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
     public void update(User user) {
         String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, address = ?, phone = ?, birth_date = ?, role = ? WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -123,20 +94,10 @@ public class UserService {
             ps.setString(7, user.getRole());
             ps.setInt(8, user.getId());
             ps.executeUpdate();
-<<<<<<< HEAD
-        } catch (SQLException e) {
-            System.err.println("Error updating user: " + e.getMessage());
-=======
-<<<<<<< HEAD
             System.out.println("Updated user with ID: " + user.getId()); // Debug log
         } catch (SQLException e) {
             System.err.println("Error updating user: " + e.getMessage());
             e.printStackTrace(); // Debug log
-=======
-        } catch (SQLException e) {
-            System.err.println("Error updating user: " + e.getMessage());
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         }
     }
 
@@ -145,48 +106,12 @@ public class UserService {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
             System.out.println("Deleted user with ID: " + id); // Debug log
         } catch (SQLException e) {
             System.err.println("Error deleting user: " + e.getMessage());
             e.printStackTrace(); // Debug log
         }
     }
-=======
->>>>>>> Ons
-        } catch (SQLException e) {
-            System.err.println("Error deleting user: " + e.getMessage());
-        }
-    }
-    public User getByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("address"),
-                        rs.getString("phone"),
-                        rs.getDate("birth_date").toLocalDate(),
-                        rs.getString("role")
-                );
-            }
-        } catch (SQLException e) {
-            System.err.println("Error getting user by email: " + e.getMessage());
-        }
-        return null;
-    }
-<<<<<<< HEAD
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
 
     public List<User> display() {
         List<User> users = new ArrayList<>();
@@ -195,9 +120,6 @@ public class UserService {
         try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 User user = new User(
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
                     rs.getInt("id"),
                     rs.getString("first_name"),
                     rs.getString("last_name"),
@@ -214,46 +136,17 @@ public class UserService {
         } catch (SQLException e) {
             System.err.println("Error fetching users: " + e.getMessage());
             e.printStackTrace(); // Debug log
-=======
->>>>>>> Ons
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        "********", // Hide password
-                        rs.getString("address"),
-                        rs.getString("phone"),
-                        rs.getDate("birth_date").toLocalDate(),
-                        rs.getString("role")
-                );
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            System.err.println("Error fetching users: " + e.getMessage());
-<<<<<<< HEAD
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         }
 
         return users;
     }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
     public User getById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
                 User user = new User(
                     rs.getInt("id"),
                     rs.getString("first_name"),
@@ -275,28 +168,4 @@ public class UserService {
         System.out.println("No user found for ID: " + id); // Debug log
         return null;
     }
-=======
->>>>>>> Ons
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("address"),
-                        rs.getString("phone"),
-                        rs.getDate("birth_date").toLocalDate(),
-                        rs.getString("role")
-                );
-            }
-        } catch (SQLException e) {
-            System.err.println("Error getting user by ID: " + e.getMessage());
-        }
-        return null;
-    }
-
-<<<<<<< HEAD
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
 }

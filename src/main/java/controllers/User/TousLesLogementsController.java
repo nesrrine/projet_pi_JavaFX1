@@ -2,6 +2,7 @@ package controllers.User;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,18 +25,22 @@ public class TousLesLogementsController {
     @FXML private TableColumn<Logement, Float> colPrix;
     @FXML private TableColumn<Logement, Void> colReserver;
 
+    @FXML private TextField searchFieldText;
+    @FXML private ComboBox<Float> comboPrix;
+
     private final LogementService logementService = new LogementService();
     private final ObservableList<Logement> logements = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        // Initialiser les colonnes
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colLocalisation.setCellValueFactory(new PropertyValueFactory<>("localisation"));
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
 
-        // Ajouter les boutons "Réserver"
+        // Ajouter bouton Réserver
         colReserver.setCellFactory(param -> new TableCell<>() {
             private final Button btn = new Button("Réserver");
 
@@ -51,7 +56,38 @@ public class TousLesLogementsController {
         });
 
         logements.setAll(logementService.display());
-        tableLogement.setItems(logements);
+
+        // Extraire les prix distincts pour la ComboBox
+        ObservableList<Float> prixList = FXCollections.observableArrayList();
+        logements.stream()
+                .map(Logement::getPrix)
+                .distinct()
+                .sorted()
+                .forEach(prixList::add);
+        comboPrix.setItems(prixList);
+
+        // Mise en place du filtrage
+        FilteredList<Logement> filteredData = new FilteredList<>(logements, p -> true);
+
+        searchFieldText.textProperty().addListener((obs, oldVal, newVal) -> filterList(filteredData));
+        comboPrix.valueProperty().addListener((obs, oldVal, newVal) -> filterList(filteredData));
+
+        tableLogement.setItems(filteredData);
+    }
+
+    private void filterList(FilteredList<Logement> filteredData) {
+        String textFilter = searchFieldText.getText().toLowerCase();
+        Float selectedPrix = comboPrix.getValue();
+
+        filteredData.setPredicate(logement -> {
+            boolean matchTexte = textFilter.isEmpty()
+                    || logement.getTitre().toLowerCase().contains(textFilter)
+                    || logement.getLocalisation().toLowerCase().contains(textFilter);
+
+            boolean matchPrix = (selectedPrix == null || logement.getPrix() == selectedPrix);
+
+            return matchTexte && matchPrix;
+        });
     }
 
     private void openReservationWindow() {

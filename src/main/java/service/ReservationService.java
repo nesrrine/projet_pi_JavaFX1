@@ -4,6 +4,7 @@ import models.Reservation;
 import utils.MyDatabase;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,5 +80,31 @@ public class ReservationService implements IService<Reservation> {
         }
 
         return list;
+    }
+
+    public List<Reservation> getReservationsForDay(LocalDate date) {
+        List<Reservation> reservationsForDay = new ArrayList<>();
+        String sql = "SELECT * FROM reservation WHERE (datedebut <= ? AND datefin >= ?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setDate(1, Date.valueOf(date));
+            ps.setDate(2, Date.valueOf(date));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Reservation r = new Reservation(
+                            rs.getInt("id"),
+                            rs.getString("titre"),
+                            rs.getDate("datedebut").toLocalDate(),
+                            rs.getDate("datefin").toLocalDate(),
+                            rs.getString("statut")
+                    );
+                    reservationsForDay.add(r);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des réservations pour le jour : " + e.getMessage());
+        }
+        return reservationsForDay;
     }
 }

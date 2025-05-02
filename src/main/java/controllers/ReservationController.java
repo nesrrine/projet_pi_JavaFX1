@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import models.Reservation;
+import service.EmailService;
 import service.ReservationService;
 
 import java.time.LocalDate;
@@ -78,11 +79,11 @@ public class ReservationController {
         btnAjouter.setDisable(!valid);
     }
 
-
     @FXML
     private void ajouterReservation() {
         if (!isInputValid()) return;
 
+        // Créer une nouvelle réservation
         Reservation r = new Reservation(
                 0,
                 tfTitre.getText(),
@@ -91,11 +92,29 @@ public class ReservationController {
                 tfStatut.getText()
         );
 
-        // Add the reservation
+        // Ajouter dans la base de données
         reservationService.add(r);
 
-        // Show success alert
+        // Envoyer un email de confirmation
+        EmailService emailService = new EmailService();
+
+        // Adresse email du destinataire (vous pouvez la récupérer depuis un champ TextField si besoin)
+        String toEmail = "medoussemaamri2@gmail.com"; // À adapter ou rendre dynamique
+
+        emailService.envoyerEmail(
+                toEmail,
+                "Confirmation de votre réservation",
+                r.getTitre(),
+                r.getDateDebut().toString(),
+                r.getDateFin().toString(),
+                r.getStatut()
+        );
+
+        // Afficher une alerte de succès
         showSuccessAlert();
+
+        // Optionnel : Réinitialiser le formulaire après ajout
+        resetForm();
     }
 
     private void showSuccessAlert() {
@@ -122,7 +141,6 @@ public class ReservationController {
         dpDateFin.setValue(null);
         tfStatut.clear();
         selectedReservation = null;
-        tableReservation.getSelectionModel().clearSelection();
         validateForm(); // Reset validation status
     }
 }

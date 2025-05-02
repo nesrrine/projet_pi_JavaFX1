@@ -3,9 +3,6 @@ package controllers.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -14,18 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.User;
 import utils.Session;
-=======
->>>>>>> Ons
-import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-<<<<<<< HEAD
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
 
 import java.io.IOException;
 
@@ -34,23 +19,11 @@ public class UserInterfaceController {
     @FXML private VBox mainContent;
     @FXML private Button logoutButton;
     @FXML private ImageView profileIcon;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
     @FXML private MenuBar menuBar;
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
 
     @FXML
     public void initialize() {
         loadPartial("/user/HomeUserWelcome.fxml");
-<<<<<<< HEAD
-    }
-
-
-=======
-<<<<<<< HEAD
         configureMenuBasedOnRole();
     }
 
@@ -85,12 +58,6 @@ public class UserInterfaceController {
             e.printStackTrace();
         }
     }
-=======
-    }
-
-
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
 
     @FXML
     private void handleProfileClick() {
@@ -104,44 +71,23 @@ public class UserInterfaceController {
 
     @FXML
     private void handleMyVlogs() {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
         if (checkVoyageurAccess()) return;
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         loadPartial("/user/MesVlogs.fxml");
     }
 
     @FXML
     private void handleCreateVlog() {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
         if (checkVoyageurAccess()) return;
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         loadPartial("/user/CreateVlog.fxml");
     }
 
     @FXML
     private void handleMyReclamations() {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
         if (checkVoyageurAccess()) return;
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         loadPartial("/user/MesReclamations.fxml");
     }
 
     @FXML
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
     private void handleMylogements() {
         if (checkVoyageurAccess()) return;
         loadPartial("/user/ajoutLogement.fxml");
@@ -216,29 +162,11 @@ public class UserInterfaceController {
         alert.showAndWait();
     }
 
-=======
->>>>>>> Ons
-    private void handleCreateReclamation() {
-        loadPartial("/user/CreateReclamation.fxml");
-    }
-
-<<<<<<< HEAD
-=======
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
     private void loadPartial(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Node content = loader.load();
-<<<<<<< HEAD
-            mainContent.getChildren().setAll(content); // replaces VBox content
-=======
-<<<<<<< HEAD
             mainContent.getChildren().setAll(content);
-=======
-            mainContent.getChildren().setAll(content); // replaces VBox content
->>>>>>> 5d64a614c574df4fe6dc3b6cb57a914a15bab66a
->>>>>>> Ons
         } catch (IOException e) {
             e.printStackTrace();
         }
