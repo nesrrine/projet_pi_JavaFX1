@@ -1,9 +1,13 @@
 package controllers.Admin;
 
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import models.Restaurant;
 import service.RestaurantService;
 
@@ -12,56 +16,98 @@ import java.util.List;
 
 public class GestionRestaurantsController {
 
-    @FXML private TableView<Restaurant> restaurantTable;
-    @FXML private TableColumn<Restaurant, String> nomColumn;
-    @FXML private TableColumn<Restaurant, String> localisationColumn;
-    @FXML private TableColumn<Restaurant, String> descriptionColumn;
-    @FXML private TableColumn<Restaurant, String> prixColumn;
-    @FXML private TableColumn<Restaurant, Void> actionsColumn;
+    @FXML private VBox restaurantListContainer;
 
     private final RestaurantService restaurantService = new RestaurantService();
 
     @FXML
     private void initialize() {
-        nomColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getNom()));
-        localisationColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getLocalisation()));
-        descriptionColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getDescription()));
-        prixColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(String.format("%.2f DT", data.getValue().getPrix())));
-
-        actionsColumn.setCellFactory(col -> new TableCell<>() {
-            private final Button deleteBtn = new Button("Supprimer");
-            private final Button editBtn = new Button("Modifier");
-
-            {
-                deleteBtn.getStyleClass().add("button-delete");
-                editBtn.getStyleClass().add("button-edit");
-
-                deleteBtn.setOnAction(e -> handleDelete(getTableView().getItems().get(getIndex())));
-                editBtn.setOnAction(e -> handleEdit(getTableView().getItems().get(getIndex())));
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    HBox actions = new HBox(10, editBtn, deleteBtn);
-                    setGraphic(actions);
-                }
-            }
-        });
-
+        // Load restaurants
         loadRestaurants();
     }
 
     private void loadRestaurants() {
         try {
+            // Clear existing items
+            restaurantListContainer.getChildren().clear();
+            
+            // Get all restaurants
             List<Restaurant> restaurants = restaurantService.getAllRestaurants();
-            restaurantTable.getItems().setAll(restaurants);
+            
+            if (restaurants.isEmpty()) {
+                Label emptyLabel = new Label("Aucun restaurant trouvé");
+                emptyLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #757575;");
+                emptyLabel.setPadding(new Insets(20));
+                restaurantListContainer.getChildren().add(emptyLabel);
+                return;
+            }
+            
+            // Create a card for each restaurant
+            for (Restaurant restaurant : restaurants) {
+                restaurantListContainer.getChildren().add(createRestaurantCard(restaurant));
+            }
         } catch (SQLException e) {
             showError("Erreur lors du chargement des restaurants", e.getMessage());
         }
+    }
+    
+    private VBox createRestaurantCard(Restaurant restaurant) {
+        // Main card container
+        VBox card = new VBox(10);
+        card.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5px; -fx-padding: 15px;");
+        card.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        
+        // Restaurant name
+        Label nameLabel = new Label(restaurant.getNom());
+        nameLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
+        nameLabel.setStyle("-fx-text-fill: #3498db;");
+        
+        // Restaurant details
+        HBox detailsBox = new HBox(20);
+        detailsBox.setAlignment(Pos.CENTER_LEFT);
+        
+        // Location
+        VBox locationBox = new VBox(5);
+        Text locationTitle = new Text("Localisation");
+        locationTitle.setStyle("-fx-font-weight: bold; -fx-fill: #555;");
+        Text locationValue = new Text(restaurant.getLocalisation());
+        locationBox.getChildren().addAll(locationTitle, locationValue);
+        
+        // Price
+        VBox priceBox = new VBox(5);
+        Text priceTitle = new Text("Prix");
+        priceTitle.setStyle("-fx-font-weight: bold; -fx-fill: #555;");
+        Text priceValue = new Text(String.format("%.2f DT", restaurant.getPrix()));
+        priceBox.getChildren().addAll(priceTitle, priceValue);
+        
+        detailsBox.getChildren().addAll(locationBox, priceBox);
+        
+        // Description
+        VBox descriptionBox = new VBox(5);
+        Text descriptionTitle = new Text("Description");
+        descriptionTitle.setStyle("-fx-font-weight: bold; -fx-fill: #555;");
+        Text descriptionValue = new Text(restaurant.getDescription());
+        descriptionValue.setWrappingWidth(600);
+        descriptionBox.getChildren().addAll(descriptionTitle, descriptionValue);
+        
+        // Action buttons
+        HBox actionsBox = new HBox(10);
+        actionsBox.setAlignment(Pos.CENTER_RIGHT);
+        
+        Button editButton = new Button("Modifier");
+        editButton.getStyleClass().add("button-edit");
+        editButton.setOnAction(e -> handleEdit(restaurant));
+        
+        Button deleteButton = new Button("Supprimer");
+        deleteButton.getStyleClass().add("button-delete");
+        deleteButton.setOnAction(e -> handleDelete(restaurant));
+        
+        actionsBox.getChildren().addAll(editButton, deleteButton);
+        
+        // Add all elements to card
+        card.getChildren().addAll(nameLabel, detailsBox, descriptionBox, actionsBox);
+        
+        return card;
     }
 
     private void handleDelete(Restaurant restaurant) {
@@ -86,6 +132,8 @@ public class GestionRestaurantsController {
         // TODO: Implement edit functionality
         System.out.println("Edit restaurant: " + restaurant.getId());
     }
+    
+
 
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -9,7 +9,6 @@ service\TransportReservationService.class
 models\TransportReservation.class
 controllers\User\CreateVlogController.class
 models\Transport.class
-controllers\Admin\GestionReclamationsController$1.class
 controllers\User\HomeController.class
 controllers\User\ReservationTransportController.class
 controllers\Admin\GestionTransportsController.class
@@ -26,18 +25,16 @@ controllers\User\MapController$JavaScriptAlert.class
 models\Vlog.class
 service\WhatsAppService.class
 models\Reclamation.class
-controllers\Admin\GestionVlogsController$1.class
 service\TransportService.class
-controllers\Admin\GestionRestaurantsController$1.class
 controllers\User\CreateRestaurantController.class
 service\PDFService.class
 controllers\User\CreateTransportController.class
 controllers\User\MapController$1.class
 utils\Session.class
+utils\PermissionManager.class
 controllers\Admin\RestaurantController.class
 controllers\Admin\GestionRestaurantsController.class
 controllers\User\TousLesTransportsController.class
-controllers\Admin\GestionTransportsController$1.class
 service\IService.class
 controllers\Admin\UserManagementController.class
 controllers\Admin\GestionReclamationsController.class

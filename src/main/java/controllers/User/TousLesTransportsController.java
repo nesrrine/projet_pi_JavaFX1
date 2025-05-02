@@ -17,6 +17,7 @@ import service.TransportReservationService;
 import service.TransportService;
 import service.UserService;
 import utils.Session;
+import utils.PermissionManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,22 +184,35 @@ public class TousLesTransportsController {
         
         availabilityBox.getChildren().addAll(statusCircle, statusLabel);
 
-        // Réserver button
-        Button reserverButton = new Button("Réserver");
-        reserverButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; " +
-                              "-fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;");
-        
-        if (!isAvailableToday) {
-            reserverButton.setDisable(true);
-            reserverButton.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white;");
-            Tooltip tooltip = new Tooltip("Ce véhicule est réservé aujourd'hui");
-            Tooltip.install(reserverButton, tooltip);
-        }
-        
-        reserverButton.setOnAction(e -> openReservationWindow(transport));
+        // Create a container for buttons
+        HBox buttonsBox = new HBox(10);
+        buttonsBox.setStyle("-fx-alignment: center;");
 
-        // Edit/Delete buttons for owner
-        if (currentUser != null && currentUser.getId() == transport.getUserId()) {
+        // Get user role
+        String userRole = currentUser != null ? currentUser.getRole() : null;
+        
+        // Add Réserver button for all users except Transporteur
+        if (!PermissionManager.ROLE_TRANSPORTEUR.equals(userRole)) {
+            Button reserverButton = new Button("Réserver");
+            reserverButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; " +
+                                  "-fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;");
+            
+            if (!isAvailableToday) {
+                reserverButton.setDisable(true);
+                reserverButton.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white;");
+                Tooltip tooltip = new Tooltip("Ce véhicule est réservé aujourd'hui");
+                Tooltip.install(reserverButton, tooltip);
+            }
+            
+            reserverButton.setOnAction(e -> openReservationWindow(transport));
+            buttonsBox.getChildren().add(reserverButton);
+        }
+
+        // Add Edit/Delete buttons for transport owners and admins
+        boolean canEdit = PermissionManager.canEditTransportItems() && 
+                         (PermissionManager.isAdmin() || (currentUser != null && currentUser.getId() == transport.getUserId()));
+        
+        if (canEdit) {
             Button editBtn = new Button("Modifier");
             editBtn.getStyleClass().add("btn-edit");
             editBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
@@ -209,12 +223,15 @@ public class TousLesTransportsController {
             deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
             deleteBtn.setOnAction(e -> handleDelete(transport));
 
-            HBox buttonsBox = new HBox(10);
-            buttonsBox.setStyle("-fx-alignment: center;");
-            buttonsBox.getChildren().addAll(reserverButton, editBtn, deleteBtn);
-            card.getChildren().addAll(imageView, typeLabel, ownerLabel, descriptionLabel, prixLabel, availabilityBox, buttonsBox);
-        } else {
-            card.getChildren().addAll(imageView, typeLabel, ownerLabel, descriptionLabel, prixLabel, availabilityBox, reserverButton);
+            buttonsBox.getChildren().addAll(editBtn, deleteBtn);
+        }
+
+        // Add all elements to the card
+        card.getChildren().addAll(imageView, typeLabel, ownerLabel, descriptionLabel, prixLabel, availabilityBox);
+        
+        // Only add buttons box if it has any buttons
+        if (!buttonsBox.getChildren().isEmpty()) {
+            card.getChildren().add(buttonsBox);
         }
 
         return card;

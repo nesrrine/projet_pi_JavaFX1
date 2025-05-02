@@ -18,6 +18,7 @@ import models.Vlog;
 import service.UserService;
 import service.VlogService;
 import utils.Session;
+import utils.PermissionManager;
 
 import java.io.File;
 
@@ -35,70 +36,78 @@ public class TousLesVlogsController {
         vlogContainer.getChildren().clear();
 
         for (Vlog vlog : vlogService.display()) {
-            VBox card = new VBox(10);
-            card.getStyleClass().add("vlog-card");
-            card.setPrefWidth(300); // or 250 depending on available width
-            card.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);");
-
-            Label title = new Label("Vlog #" + vlog.getId());
-            title.getStyleClass().add("vlog-title");
-
-            Label author = new Label("Par: " + userService.getById(vlog.getAuthorId()).getFirstName());
-            author.getStyleClass().add("vlog-author");
-
-            Label content = new Label(vlog.getContent());
-            content.getStyleClass().add("vlog-content");
-            content.setWrapText(true);
-
-            VBox inner = new VBox(title, author, content);
-            inner.setSpacing(10);
-            inner.setStyle("-fx-alignment: top-center;");
-
-            // 📷 Display image if available
-            if (vlog.getImage() != null && !vlog.getImage().isEmpty()) {
-                File imageFile = new File(vlog.getImage());
-                if (imageFile.exists()) {
-                    ImageView imageView = new ImageView(new Image(imageFile.toURI().toString()));
-                    imageView.setFitWidth(200);
-                    imageView.setPreserveRatio(true);
-                    inner.getChildren().add(imageView);
-                }
-            }
-
-            // ▶ Add video view button if exists
-            if (vlog.getVideo() != null && !vlog.getVideo().isEmpty()) {
-                File videoFile = new File(vlog.getVideo());
-                if (videoFile.exists()) {
-                    Button showVideoBtn = new Button("Voir Vidéo");
-                    showVideoBtn.getStyleClass().add("btn-edit");
-                    showVideoBtn.setOnAction(e -> openVideoDialog(videoFile));
-                    inner.getChildren().add(showVideoBtn);
-                }
-            }
-
-            // ✏️ Only the author can edit/delete
-            if (currentUser.getId() == vlog.getAuthorId()) {
-                Button editBtn = new Button("Modifier");
-                editBtn.getStyleClass().add("btn-edit");
-                editBtn.setOnAction(e -> openEditVlog(vlog));
-
-                Button deleteBtn = new Button("Supprimer");
-                deleteBtn.getStyleClass().add("btn-delete");
-                deleteBtn.setOnAction(e -> {
-                    vlogService.delete(vlog.getId());
-                    initialize(); // Refresh
-                });
-
-                HBox buttons = new HBox(10, editBtn, deleteBtn);
-                buttons.setStyle("-fx-alignment: center;");
-                buttons.getStyleClass().add("vlog-buttons");
-                buttons.setSpacing(10);
-                inner.getChildren().add(buttons);
-            }
-
-            card.getChildren().add(inner);
+            VBox card = createVlogCard(vlog, currentUser);
             vlogContainer.getChildren().add(card);
         }
+    }
+    
+    private VBox createVlogCard(Vlog vlog, User currentUser) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("vlog-card");
+        card.setPrefWidth(300); // or 250 depending on available width
+        card.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);");
+
+        Label title = new Label("Vlog #" + vlog.getId());
+        title.getStyleClass().add("vlog-title");
+
+        Label author = new Label("Par: " + userService.getById(vlog.getAuthorId()).getFirstName());
+        author.getStyleClass().add("vlog-author");
+
+        Label content = new Label(vlog.getContent());
+        content.getStyleClass().add("vlog-content");
+        content.setWrapText(true);
+
+        VBox inner = new VBox(title, author, content);
+        inner.setSpacing(10);
+        inner.setStyle("-fx-alignment: top-center;");
+
+        // 📷 Display image if available
+        if (vlog.getImage() != null && !vlog.getImage().isEmpty()) {
+            File imageFile = new File(vlog.getImage());
+            if (imageFile.exists()) {
+                ImageView imageView = new ImageView(new Image(imageFile.toURI().toString()));
+                imageView.setFitWidth(200);
+                imageView.setPreserveRatio(true);
+                inner.getChildren().add(imageView);
+            }
+        }
+
+        // ▶ Add video view button if exists
+        if (vlog.getVideo() != null && !vlog.getVideo().isEmpty()) {
+            File videoFile = new File(vlog.getVideo());
+            if (videoFile.exists()) {
+                Button showVideoBtn = new Button("Voir Vidéo");
+                showVideoBtn.getStyleClass().add("btn-edit");
+                showVideoBtn.setOnAction(e -> openVideoDialog(videoFile));
+                inner.getChildren().add(showVideoBtn);
+            }
+        }
+
+        // Check permissions for edit/delete buttons
+        boolean canEdit = PermissionManager.canEditVlogItems() && 
+                         (PermissionManager.isAdmin() || (currentUser != null && currentUser.getId() == vlog.getAuthorId()));
+        
+        if (canEdit) {
+            Button editBtn = new Button("Modifier");
+            editBtn.getStyleClass().add("btn-edit");
+            editBtn.setOnAction(e -> openEditVlog(vlog));
+
+            Button deleteBtn = new Button("Supprimer");
+            deleteBtn.getStyleClass().add("btn-delete");
+            deleteBtn.setOnAction(e -> {
+                vlogService.delete(vlog.getId());
+                initialize(); // Refresh
+            });
+
+            HBox buttons = new HBox(10, editBtn, deleteBtn);
+            buttons.setStyle("-fx-alignment: center;");
+            buttons.getStyleClass().add("vlog-buttons");
+            buttons.setSpacing(10);
+            inner.getChildren().add(buttons);
+        }
+
+        card.getChildren().add(inner);
+        return card;
     }
 
     private void openEditVlog(Vlog vlog) {

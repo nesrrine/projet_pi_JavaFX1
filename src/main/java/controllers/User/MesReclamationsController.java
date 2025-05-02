@@ -9,9 +9,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import models.Reclamation;
+import models.User;
 import service.ReclamationService;
 import service.UserService;
 import utils.Session;
+import utils.PermissionManager;
 
 import java.io.File;
 
@@ -55,7 +57,7 @@ public class MesReclamationsController {
         actionsCol.setCellFactory(col -> new TableCell<>() {
             private final Button editBtn = new Button("Modifier");
             private final Button deleteBtn = new Button("Supprimer");
-            private final HBox container = new HBox(10, editBtn, deleteBtn);
+            private final HBox container = new HBox(10);
 
             {
                 editBtn.getStyleClass().add("btn-edit");
@@ -78,7 +80,30 @@ public class MesReclamationsController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(container);
+                    // Get current user and selected reclamation
+                    User currentUser = Session.getCurrentUser();
+                    Reclamation reclamation = getTableView().getItems().get(getIndex());
+                    
+                    // Check permissions
+                    boolean canManageReclamations = PermissionManager.canManageReclamations();
+                    boolean isAuthor = currentUser != null && currentUser.getId() == reclamation.getAuteurId();
+                    boolean isAdmin = PermissionManager.isAdmin();
+                    
+                    // Clear previous buttons
+                    container.getChildren().clear();
+                    
+                    // Add edit button if user has permission
+                    if (isAdmin || (canManageReclamations && isAuthor)) {
+                        container.getChildren().add(editBtn);
+                    }
+                    
+                    // Add delete button if user has permission
+                    if (isAdmin || (canManageReclamations && isAuthor)) {
+                        container.getChildren().add(deleteBtn);
+                    }
+                    
+                    // Only show container if it has buttons
+                    setGraphic(container.getChildren().isEmpty() ? null : container);
                 }
             }
         });
@@ -87,9 +112,18 @@ public class MesReclamationsController {
     }
 
     private void loadTableData() {
-        ObservableList<Reclamation> list = FXCollections.observableArrayList(
-                reclamationService.getByAuteur(Session.getCurrentUser().getId())
-        );
+        User currentUser = Session.getCurrentUser();
+        ObservableList<Reclamation> list;
+        
+        // If admin, show all reclamations, otherwise only show user's reclamations
+        if (PermissionManager.isAdmin()) {
+            list = FXCollections.observableArrayList(reclamationService.display());
+        } else {
+            list = FXCollections.observableArrayList(
+                    reclamationService.getByAuteur(currentUser.getId())
+            );
+        }
+        
         reclamationTable.setItems(list);
     }
 

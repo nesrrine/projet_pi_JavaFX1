@@ -17,6 +17,7 @@ import models.User;
 import service.RestaurantService;
 import service.UserService;
 import utils.Session;
+import utils.PermissionManager;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -202,31 +203,77 @@ public class TousLesRestaurantsController {
         VBox buttonsBox = new VBox(8);
         buttonsBox.setAlignment(javafx.geometry.Pos.CENTER);
         
+        // Get current user role
+        User currentUser = Session.getCurrentUser();
+        String userRole = currentUser != null ? currentUser.getRole() : null;
+        
         // First row of buttons
         HBox topButtonsRow = new HBox(8);
         topButtonsRow.setAlignment(javafx.geometry.Pos.CENTER);
         
-        // Reserve button
-        Button reserveButton = new Button("Réserver");
-        reserveButton.setPrefWidth(140);
-        reserveButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;");
-        reserveButton.setOnAction(e -> openReservationWindow(restaurant));
+        // Reserve button - All users except Restaurant owners can reserve
+        if (!PermissionManager.ROLE_RESTAURANT.equals(userRole)) {
+            Button reserveButton = new Button("Réserver");
+            reserveButton.setPrefWidth(140);
+            reserveButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;");
+            reserveButton.setOnAction(e -> openReservationWindow(restaurant));
+            topButtonsRow.getChildren().add(reserveButton);
+        }
         
-        // Map button
+        // Map button - All users can view location
         Button mapButton = new Button("Voir sur la carte");
         mapButton.setPrefWidth(140);
         mapButton.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;");
         mapButton.setOnAction(e -> handleViewLocation(restaurant));
+        topButtonsRow.getChildren().add(mapButton);
         
-        topButtonsRow.getChildren().addAll(reserveButton, mapButton);
+        // Add edit button for restaurant owners and admins if they own this restaurant
+        if (PermissionManager.canEditRestaurantItems() && 
+            (PermissionManager.isAdmin() || (currentUser != null && restaurant.getUserId() == currentUser.getId()))) {
+            Button editButton = new Button("Modifier");
+            editButton.setPrefWidth(140);
+            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;");
+            editButton.setOnAction(e -> openEditRestaurant(restaurant));
+            
+            // If we have 2 buttons already, create a new row
+            if (topButtonsRow.getChildren().size() >= 2) {
+                buttonsBox.getChildren().add(topButtonsRow);
+                topButtonsRow = new HBox(8);
+                topButtonsRow.setAlignment(javafx.geometry.Pos.CENTER);
+            }
+            
+            topButtonsRow.getChildren().add(editButton);
+        }
         
-        // Google Maps button in second row
+        // Add delete button for restaurant owners and admins if they own this restaurant
+        if (PermissionManager.canEditRestaurantItems() && 
+            (PermissionManager.isAdmin() || (currentUser != null && restaurant.getUserId() == currentUser.getId()))) {
+            Button deleteButton = new Button("Supprimer");
+            deleteButton.setPrefWidth(140);
+            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;");
+            deleteButton.setOnAction(e -> handleDelete(restaurant));
+            
+            // If we have 2 buttons already, create a new row
+            if (topButtonsRow.getChildren().size() >= 2) {
+                buttonsBox.getChildren().add(topButtonsRow);
+                topButtonsRow = new HBox(8);
+                topButtonsRow.setAlignment(javafx.geometry.Pos.CENTER);
+            }
+            
+            topButtonsRow.getChildren().add(deleteButton);
+        }
+        
+        // Add the top buttons row if it has any buttons
+        if (!topButtonsRow.getChildren().isEmpty()) {
+            buttonsBox.getChildren().add(topButtonsRow);
+        }
+        
+        // Google Maps button - All users can open Google Maps
         Button googleMapsButton = new Button("Ouvrir dans Google Maps");
         googleMapsButton.setPrefWidth(290);
         googleMapsButton.setStyle("-fx-background-color: #4285F4; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;");
         googleMapsButton.setOnAction(e -> openInGoogleMaps(restaurant));
-        
-        buttonsBox.getChildren().addAll(topButtonsRow, googleMapsButton);
+        buttonsBox.getChildren().add(googleMapsButton);
         
         // Add all elements to the card
         card.getChildren().addAll(

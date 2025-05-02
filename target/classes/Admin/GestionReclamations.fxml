@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/21.0.2"
@@ -17,16 +18,12 @@
                     <Font name="Segoe UI Bold" size="22.0" />
                 </font>
             </Label>
+            
 
-            <TableView fx:id="reclamationTable" prefWidth="700" prefHeight="450">
-                <columns>
-                    <TableColumn fx:id="titreColumn" text="Titre" prefWidth="180"/>
-                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
-                    <TableColumn fx:id="auteurColumn" text="Auteur" prefWidth="120"/>
-                    <TableColumn fx:id="cibleColumn" text="Cible" prefWidth="120"/>
-                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
-                </columns>
-            </TableView>
+
+            <ScrollPane fitToWidth="true" prefHeight="450" styleClass="edge-to-edge">
+                <VBox fx:id="reclamationListContainer" spacing="10" />
+            </ScrollPane>
         </VBox>
     </children>
 </StackPane>

@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/21.0.2"
@@ -18,15 +19,12 @@
                     <Font name="Segoe UI Bold" size="22.0"/>
                 </font>
             </Label>
+            
 
-            <TableView fx:id="transportTable" prefWidth="700" prefHeight="450" styleClass="styled-table">
-                <columns>
-                    <TableColumn fx:id="typeColumn" text="Type" prefWidth="150"/>
-                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="250"/>
-                    <TableColumn fx:id="prixColumn" text="Prix" prefWidth="100"/>
-                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
-                </columns>
-            </TableView>
+
+            <ScrollPane fitToWidth="true" prefHeight="450" styleClass="edge-to-edge">
+                <VBox fx:id="transportListContainer" spacing="10" />
+            </ScrollPane>
 
         </VBox>
     </children>

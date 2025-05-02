@@ -1,9 +1,13 @@
 package controllers.Admin;
 
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import models.Vlog;
 import service.UserService;
 import service.VlogService;
@@ -12,52 +16,92 @@ import java.util.List;
 
 public class GestionVlogsController {
 
-    @FXML private TableView<Vlog> vlogTable;
-    @FXML private TableColumn<Vlog, String> contentColumn;
-    @FXML private TableColumn<Vlog, String> authorColumn;
-    @FXML private TableColumn<Vlog, String> dateColumn;
-    @FXML private TableColumn<Vlog, Void> actionsColumn;
+    @FXML private VBox vlogListContainer;
 
     private final VlogService vlogService = new VlogService();
     private final UserService userService = new UserService();
 
     @FXML
     private void initialize() {
-        contentColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getContent()));
-        authorColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(userService.getById(data.getValue().getAuthorId()).getFirstName()));
-        dateColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getCreatedAt().toLocalDate().toString()));
-
-        actionsColumn.setCellFactory(col -> new TableCell<>() {
-            private final Button deleteBtn = new Button("Supprimer");
-
-            {
-                deleteBtn.getStyleClass().add("button-delete");
-
-                deleteBtn.setOnAction(e -> handleDelete(getTableView().getItems().get(getIndex())));
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    HBox actions = new HBox(10,  deleteBtn);
-                    setGraphic(actions);
-                }
-            }
-        });
-
+        // Load vlogs
         loadVlogs();
     }
 
     private void loadVlogs() {
-        vlogTable.getItems().setAll(vlogService.display());
+        // Clear existing items
+        vlogListContainer.getChildren().clear();
+        
+        // Get all vlogs
+        List<Vlog> vlogs = vlogService.display();
+        
+        if (vlogs.isEmpty()) {
+            Label emptyLabel = new Label("Aucun vlog trouvé");
+            emptyLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #757575;");
+            emptyLabel.setPadding(new Insets(20));
+            vlogListContainer.getChildren().add(emptyLabel);
+            return;
+        }
+        
+        // Create a card for each vlog
+        for (Vlog vlog : vlogs) {
+            vlogListContainer.getChildren().add(createVlogCard(vlog));
+        }
     }
-
+    
+    private VBox createVlogCard(Vlog vlog) {
+        // Main card container
+        VBox card = new VBox(10);
+        card.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5px; -fx-padding: 15px;");
+        card.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        
+        // Author and date
+        HBox headerBox = new HBox(10);
+        headerBox.setAlignment(Pos.CENTER_LEFT);
+        
+        // Author
+        Label authorLabel = new Label(userService.getById(vlog.getAuthorId()).getFirstName());
+        authorLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
+        authorLabel.setStyle("-fx-text-fill: #3498db;");
+        
+        // Date
+        Label dateLabel = new Label(vlog.getCreatedAt().toLocalDate().toString());
+        dateLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-style: italic;");
+        
+        headerBox.getChildren().addAll(authorLabel, new Label(" • "), dateLabel);
+        
+        // Content
+        Text contentText = new Text(vlog.getContent());
+        contentText.setWrappingWidth(600);
+        
+        // Action buttons
+        HBox actionsBox = new HBox(10);
+        actionsBox.setAlignment(Pos.CENTER_RIGHT);
+        
+        Button deleteButton = new Button("Supprimer");
+        deleteButton.getStyleClass().add("button-delete");
+        deleteButton.setOnAction(e -> handleDelete(vlog));
+        
+        actionsBox.getChildren().add(deleteButton);
+        
+        // Add all elements to card
+        card.getChildren().addAll(headerBox, contentText, actionsBox);
+        
+        return card;
+    }
 
     private void handleDelete(Vlog vlog) {
-        vlogService.delete(vlog.getId());
-        loadVlogs();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer le vlog");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer ce vlog ?");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                vlogService.delete(vlog.getId());
+                loadVlogs();
+            }
+        });
     }
+    
+
 }
