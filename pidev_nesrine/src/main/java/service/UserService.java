@@ -36,6 +36,8 @@ public class UserService {
             ps.setBoolean(9, user.isActive()); // Ajouter le champ active
             ps.executeUpdate();
             System.out.println("User signed up successfully"); // Debug log
+
+
         } catch (SQLException e) {
             System.err.println("Error signing up user: " + e.getMessage());
             e.printStackTrace(); // Debug log
@@ -184,7 +186,7 @@ public class UserService {
         return null;
     }
 
-    public void update(User user) {
+    public boolean update(User user) {
         String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, address = ?, phone = ?, birth_date = ?, role = ? WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user.getFirstName());
@@ -195,11 +197,13 @@ public class UserService {
             ps.setDate(6, Date.valueOf(user.getBirthDate()));
             ps.setString(7, user.getRole());
             ps.setInt(8, user.getId());
-            ps.executeUpdate();
-            System.out.println("Updated user with ID: " + user.getId()); // Debug log
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("Updated user with ID: " + user.getId() + ", rows affected: " + rowsAffected); // Debug log
+            return rowsAffected > 0;
         } catch (SQLException e) {
             System.err.println("Error updating user: " + e.getMessage());
             e.printStackTrace(); // Debug log
+            return false;
         }
     }
 

@@ -1,0 +1,16 @@
+=== SMS SIMULÉ ====
+Date: 2025-05-02 19:51:46
+De: +12029526447
+À: +216 58414579
+Message ID: SIM1746211906257
+Contenu: user created successfully
+===================
+
+=== SMS SIMULÉ ====
+Date: 2025-05-02 19:53:29
+De: +12029526447
+À: +21658414579
+Message ID: SIM1746212009156
+Contenu: user created successfully
+===================
+

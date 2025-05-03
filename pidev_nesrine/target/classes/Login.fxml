@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -23,6 +24,9 @@
 
             <TextField fx:id="emailField" maxWidth="250" promptText="Email" />
             <PasswordField fx:id="passwordField" maxWidth="250" promptText="Mot de passe" />
+
+            <!-- Checkbox pour vérification SMS -->
+            <CheckBox fx:id="smsVerificationCheckbox" text="Vérification par SMS" maxWidth="250" />
 
             <Button fx:id="loginButton" onAction="#handleLogin" text="Se connecter" />
 

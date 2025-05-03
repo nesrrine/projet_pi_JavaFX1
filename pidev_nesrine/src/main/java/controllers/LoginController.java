@@ -4,12 +4,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.User;
 import service.UserService;
 import utils.Session;
+import utils.TwilioSMSService;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class LoginController {
 
@@ -46,13 +49,41 @@ public class LoginController {
         if (userService.login(email, password)) {
             System.out.println("Login successful for user ID: " + user.getId()); // Debug log
 
-            Session.setCurrentUser(user);
-            System.out.println("Session user ID after set: " + Session.getCurrentUser().getId()); // Debug log
-            showAlert(Alert.AlertType.INFORMATION, "Connexion réussie !");
-            loadRoleUI(user.getRole());
+            // Continuer avec la connexion
+            proceedWithLogin(user);
         } else {
             showAlert(Alert.AlertType.ERROR, "Email ou mot de passe incorrect.");
         }
+    }
+
+    /**
+     * Finalise le processus de connexion et charge l'interface appropriée
+     * @param user L'utilisateur connecté
+     */
+    private void proceedWithLogin(User user) {
+        Session.setCurrentUser(user);
+        System.out.println("Session user ID after set: " + Session.getCurrentUser().getId()); // Debug log
+
+        // Envoyer un SMS
+        try {
+            // Formater le numéro
+            String specificPhoneNumber = "+21658414579";
+
+            // Message avec les informations de l'utilisateur qui s'est connecté
+            String message = "Alerte: L'utilisateur " + user.getFirstName() + " " + user.getLastName() +
+                             " (ID: " + user.getId() + ") s'est connecté le " +
+                             java.time.LocalDateTime.now().format(
+                                 java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"));
+
+            TwilioSMSService.sendSMS(specificPhoneNumber, message);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'envoi du SMS: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        showAlert(Alert.AlertType.INFORMATION, "Connexion réussie !");
+
+        loadRoleUI(user.getRole());
     }
 
     private void loadRoleUI(String role) {
@@ -104,6 +135,4 @@ public class LoginController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
 }

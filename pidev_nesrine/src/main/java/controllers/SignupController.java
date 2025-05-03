@@ -2,11 +2,14 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.User;
 import service.UserService;
+import service.EmailService;
 import utils.RoleUtils;
 
 import java.io.IOException;
@@ -47,19 +50,45 @@ public class SignupController {
     private void handleSignup() {
         if (!validateFields()) return;
 
+        // Récupérer le numéro de téléphone
+        String phoneNumber = phoneField.getText().trim();
+
+        // Formater le numéro de téléphone (ajouter le préfixe +216 si nécessaire)
+        if (phoneNumber.startsWith("0")) {
+            phoneNumber = "+216" + phoneNumber.substring(1);
+        } else if (!phoneNumber.startsWith("+")) {
+            phoneNumber = "+216" + phoneNumber;
+        }
+
+        // Créer l'utilisateur
         User user = new User(
-                firstNameField.getText().trim(),
-                lastNameField.getText().trim(),
-                emailField.getText().trim(),
-                passwordField.getText().trim(),
-                addressField.getText().trim(),
-                phoneField.getText().trim(),
-                birthDatePicker.getValue(),
-                roleComboBox.getValue()
+            firstNameField.getText().trim(),
+            lastNameField.getText().trim(),
+            emailField.getText().trim(),
+            passwordField.getText().trim(),
+            addressField.getText().trim(),
+            phoneNumber,
+            birthDatePicker.getValue(),
+            roleComboBox.getValue()
         );
 
+        // Inscrire l'utilisateur
         userService.signup(user);
-        showAlert(Alert.AlertType.INFORMATION, "Inscription réussie !");
+
+        // Envoyer un email de bienvenue
+        EmailService emailService = new EmailService();
+        boolean emailSent = emailService.sendWelcomeEmail(
+            user.getEmail(),
+            user.getFirstName(),
+            user.getLastName()
+        );
+
+        if (emailSent) {
+            showAlert(Alert.AlertType.INFORMATION, "Inscription réussie ! Un email de bienvenue a été envoyé à votre adresse email.");
+        } else {
+            showAlert(Alert.AlertType.INFORMATION, "Inscription réussie ! Mais l'envoi de l'email de bienvenue a échoué.");
+        }
+
         goToLogin();
     }
 
@@ -68,6 +97,8 @@ public class SignupController {
 
         // Reset styles and messages
         resetValidation();
+
+
 
         if (firstNameField.getText().trim().isEmpty()) {
             setError(firstNameField, firstNameError, "Le prénom est requis.");
@@ -97,8 +128,8 @@ public class SignupController {
         }
 
         String phone = phoneField.getText().trim();
-        if (!phone.matches("\\d{8}")) {
-            setError(phoneField, phoneError, "8 chiffres requis.");
+        if (!isValidPhoneNumber(phone)) {
+            setError(phoneField, phoneError, "Format invalide. Ex: 12345678");
             isValid = false;
         }
 
@@ -143,7 +174,13 @@ public class SignupController {
     }
 
     private boolean isValidPhoneNumber(String phone) {
-        return phone.matches("\\d{8}");
+        // Supprimer les espaces, tirets et parenthèses
+        phone = phone.replaceAll("[\\s\\-()]+", "");
+
+        // Accepter les formats: 12345678, +21612345678, 00216123456789
+        return phone.matches("\\d{8}") || // Format tunisien standard
+               phone.matches("\\+216\\d{8}") || // Format international avec +
+               phone.matches("00216\\d{8}"); // Format international avec 00
     }
 
     @FXML
