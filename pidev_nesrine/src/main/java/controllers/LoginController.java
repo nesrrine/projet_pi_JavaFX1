@@ -87,7 +87,14 @@ public class LoginController {
     }
 
     private void loadRoleUI(String role) {
-        String fxml = role.equalsIgnoreCase("Admin") ? "/Admin/AdminDashboard.fxml" : "/User/UserInterface.fxml";
+        String fxml;
+
+        if (role.equalsIgnoreCase("Admin")) {
+            fxml = "/Admin/AdminDashboard.fxml";
+        } else {
+            // Pour tous les utilisateurs non-admin, charger d'abord le chatbot
+            fxml = "/User/Chatbot.fxml";
+        }
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));

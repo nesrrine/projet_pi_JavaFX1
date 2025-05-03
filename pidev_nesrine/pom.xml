@@ -96,12 +96,7 @@
             <version>1.7.36</version>
         </dependency>
 
-        <!-- JSON pour traiter les réponses API -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20230618</version>
-        </dependency>
+
 
         <!-- Twilio pour l'envoi de SMS -->
         <dependency>
@@ -114,6 +109,12 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230618</version>
         </dependency>
 
     </dependencies>
