@@ -292,28 +292,8 @@
         var customLocationMarker;
         var selectedLocationOption;
         var mapClickEnabled = true;
-        var searchLocations = [
-            { name: "Aéroport de Tunis-Carthage", lat: 36.8512, lng: 10.2270 },
-            { name: "Port de La Goulette", lat: 36.8183, lng: 10.3050 },
-            { name: "Université de Tunis El Manar", lat: 36.8131, lng: 10.1387 },
-            { name: "Bardo National Museum", lat: 36.8092, lng: 10.1342 },
-            { name: "Médina de Tunis", lat: 36.7988, lng: 10.1719 },
-            { name: "Parc du Belvédère", lat: 36.8142, lng: 10.1684 },
-            { name: "Sidi Bou Said", lat: 36.8698, lng: 10.3412 },
-            { name: "Avenue Habib Bourguiba", lat: 36.7993, lng: 10.1843 },
-            { name: "Cathédrale de Tunis", lat: 36.7991, lng: 10.1824 },
-            { name: "Mosquée Zitouna", lat: 36.7986, lng: 10.1711 },
-            { name: "Théâtre municipal de Tunis", lat: 36.8003, lng: 10.1842 },
-            { name: "Lac de Tunis", lat: 36.8167, lng: 10.2333 },
-            { name: "Gammarth", lat: 36.9167, lng: 10.2833 },
-            { name: "Bizerte", lat: 37.2744, lng: 9.8739 },
-            { name: "Nabeul", lat: 36.4561, lng: 10.7372 },
-            { name: "Kairouan", lat: 35.6784, lng: 10.0957 },
-            { name: "Tabarka", lat: 36.9547, lng: 8.7581 },
-            { name: "Tozeur", lat: 33.9197, lng: 8.1335 },
-            { name: "Douz", lat: 33.4667, lng: 9.0333 },
-            { name: "Matmata", lat: 33.5500, lng: 9.9667 }
-        ];
+        var tileRetryCount = {};
+        var maxRetries = 3;
         
         function initMap() {
             console.log("Initializing directions map");
@@ -321,19 +301,69 @@
             // Default center on Tunisia
             var tunisia = [36.8065, 10.1815];
             
-            // Create the map with reduced animations for better performance
+            // Create the map with optimized settings
             map = L.map('map', {
-                zoomAnimation: false,
-                markerZoomAnimation: false,
-                fadeAnimation: false
-            }).setView(tunisia, 8);
+                preferCanvas: true,  // Use canvas rendering for better performance
+                fadeAnimation: false, // Disable fade animations for better performance
+                zoomAnimation: false, // Disable zoom animations for better performance
+                markerZoomAnimation: false, // Disable marker zoom animations
+                attributionControl: false, // Hide attribution for cleaner UI
+                doubleClickZoom: true,
+                renderer: L.canvas() // Force canvas renderer
+            }).setView(tunisia, 7);
             
-            // Add the OpenStreetMap tiles with low-res tiles for better performance
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 18,
-                minZoom: 5
+            // Use a more reliable tile provider
+            var mainLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                minZoom: 2,
+                keepBuffer: 16,  // Keep more tiles in buffer
+                updateWhenIdle: false,
+                updateWhenZooming: false,
+                tileSize: 256,
+                crossOrigin: true
             }).addTo(map);
+            
+            // Add tile error handling with automatic retry
+            mainLayer.on('tileerror', function(e) {
+                var tileKey = e.coords.x + ':' + e.coords.y + ':' + e.coords.z;
+                if (!tileRetryCount[tileKey]) {
+                    tileRetryCount[tileKey] = 0;
+                }
+                
+                if (tileRetryCount[tileKey] < maxRetries) {
+                    tileRetryCount[tileKey]++;
+                    console.log('Tile load error, retrying: ' + tileKey + ' (attempt ' + tileRetryCount[tileKey] + ')');
+                    
+                    // Force reload this tile
+                    setTimeout(function() {
+                        mainLayer.redraw();
+                    }, 500 * tileRetryCount[tileKey]); // Increasing delay for each retry
+                }
+            });
+            
+            // Force redraw on zoom
+            map.on('zoomend', function() {
+                mainLayer.redraw();
+                // Clear the tile retry counter
+                tileRetryCount = {};
+                
+                // Force multiple redraws with increasing delays
+                setTimeout(function() { mainLayer.redraw(); }, 300);
+                setTimeout(function() { mainLayer.redraw(); }, 1000);
+                setTimeout(function() { mainLayer.redraw(); }, 2000);
+            });
+            
+            // Force redraw on move
+            map.on('moveend', function() {
+                mainLayer.redraw();
+                // Clear the tile retry counter
+                tileRetryCount = {};
+                
+                // Force multiple redraws with increasing delays
+                setTimeout(function() { mainLayer.redraw(); }, 300);
+                setTimeout(function() { mainLayer.redraw(); }, 1000);
+                setTimeout(function() { mainLayer.redraw(); }, 2000);
+            });
             
             // Get restaurant coordinates from JavaFX
             try {
@@ -859,7 +889,17 @@
         // Initialize the map when the page loads
         window.onload = function() {
             console.log("Window loaded, initializing map");
-            setTimeout(initMap, 500); // Small delay to ensure window object is fully initialized
+            setTimeout(function() {
+                initMap();
+                
+                // Handle window resize events
+                window.addEventListener('resize', function() {
+                    if (map) {
+                        map.invalidateSize();
+                        console.log("Map size invalidated due to resize");
+                    }
+                });
+            }, 500); // Small delay to ensure window object is fully initialized
         };
     </script>
 </body>

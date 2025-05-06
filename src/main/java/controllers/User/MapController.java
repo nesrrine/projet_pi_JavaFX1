@@ -33,6 +33,15 @@ public class MapController {
     public void initialize() {
         webEngine = webView.getEngine();
         
+        // Enable hardware acceleration for better map performance
+        webView.setContextMenuEnabled(false);
+        
+        // Set preferred size to ensure proper rendering
+        webView.setPrefSize(800, 600);
+        
+        // Enable smooth scrolling for better map interaction
+        webView.getEngine().setUserStyleSheetLocation(getClass().getResource("/maps/smooth-scroll.css").toExternalForm());
+        
         // Set up close button
         closeButton.setOnAction(event -> {
             Stage stage = (Stage) closeButton.getScene().getWindow();
@@ -69,6 +78,27 @@ public class MapController {
                 window.setMember("initialLat", initialLat);
                 window.setMember("initialLng", initialLng);
                 
+                // Force map to redraw after a short delay
+                Platform.runLater(() -> {
+                    try {
+                        // First invalidation
+                        webEngine.executeScript("if (map) { map.invalidateSize(); }");
+                        
+                        // Schedule multiple invalidations to ensure tiles load properly
+                        scheduleMapRefresh();
+                        
+                        // Add event listener for map move and zoom events
+                        webEngine.executeScript(
+                            "if (map) {" +
+                            "  map.on('moveend', function() { map.invalidateSize(); });" +
+                            "  map.on('zoomend', function() { map.invalidateSize(); });" +
+                            "}"
+                        );
+                    } catch (Exception e) {
+                        System.err.println("Error refreshing map: " + e.getMessage());
+                    }
+                });
+                
                 // Start polling for location confirmation
                 startPollingForLocationConfirmation();
             }
@@ -104,19 +134,21 @@ public class MapController {
                             
                             // Reset the confirmation flag
                             webEngine.executeScript(
-                                "document.getElementById('locationConfirmed').value = 'false'"
+                                "document.getElementById('locationConfirmed').value = 'false';"
                             );
                             
-                            // Update coordinates
+                            // Update the stored coordinates
                             latitude = lat;
                             longitude = lng;
                             
-                            // Call the callback
+                            System.out.println("Location confirmed: " + lat + ", " + lng);
+                            
+                            // Call the callback function
                             if (locationCallback != null) {
                                 locationCallback.accept(lat, lng);
                             }
                             
-                            // Close the map window
+                            // Close the dialog
                             if (closeButton != null && closeButton.getScene() != null) {
                                 Stage stage = (Stage) closeButton.getScene().getWindow();
                                 stage.close();
@@ -130,7 +162,7 @@ public class MapController {
                     }
                 });
             }
-        }, 500, 500); // Check every 500ms
+        }, 1000, 1000); // Check every 1000ms instead of 500ms for better performance
     }
     
     /**
@@ -163,6 +195,27 @@ public class MapController {
                     
                     System.out.println("Restaurant information set in JavaScript");
                     
+                    // Force map to redraw after a short delay
+                    Platform.runLater(() -> {
+                        try {
+                            // First invalidation
+                            webEngine.executeScript("if (map) { map.invalidateSize(); }");
+                            
+                            // Schedule multiple invalidations to ensure tiles load properly
+                            scheduleMapRefresh();
+                            
+                            // Add event listener for map move and zoom events
+                            webEngine.executeScript(
+                                "if (map) {" +
+                                "  map.on('moveend', function() { map.invalidateSize(); });" +
+                                "  map.on('zoomend', function() { map.invalidateSize(); });" +
+                                "}"
+                            );
+                        } catch (Exception e) {
+                            System.err.println("Error refreshing map: " + e.getMessage());
+                        }
+                    });
+                    
                     // Add console logging to debug JavaScript issues
                     webEngine.executeScript(
                         "console.log = function(message) { " +
@@ -191,6 +244,20 @@ public class MapController {
             System.err.println("Error loading directions map: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    private void scheduleMapRefresh() {
+        Platform.runLater(() -> {
+            try {
+                Thread.sleep(200);
+                webEngine.executeScript("if (map) { map.invalidateSize(); }");
+                
+                Thread.sleep(400);
+                webEngine.executeScript("if (map) { map.invalidateSize(); }");
+            } catch (InterruptedException e) {
+                System.err.println("Error refreshing map: " + e.getMessage());
+            }
+        });
     }
     
     public class JavaScriptAlert {
