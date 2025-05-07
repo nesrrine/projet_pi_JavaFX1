@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/21.0.2"
+           fx:controller="controllers.Admin.GestionVlogsController"
+           stylesheets="@/styles/style.css"
+           prefHeight="550" prefWidth="750"
+           style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-padding: 20;">
+
+    <children>
+        <VBox spacing="20" alignment="TOP_CENTER">
+            <Label text="Gestion des Vlogs">
+                <font>
+                    <Font name="Segoe UI Bold" size="22.0"/>
+                </font>
+            </Label>
+
+            <!-- Bouton Analyse -->
+            <HBox alignment="CENTER_RIGHT" prefWidth="700">
+                <Button text="Analyser les commentaires"
+                        onAction="#handleAnalyseSentiment"
+                        styleClass="button-analyse"/>
+            </HBox>
+
+            <TableView fx:id="vlogTable" prefWidth="700" prefHeight="450" styleClass="styled-table">
+                <columns>
+                    <TableColumn fx:id="contentColumn" text="Contenu" prefWidth="200"/>
+                    <TableColumn fx:id="authorColumn" text="Auteur" prefWidth="120"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                    <TableColumn fx:id="isReportedColumn" text="Signalé" prefWidth="80"/>
+                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="180"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </children>
+</StackPane>

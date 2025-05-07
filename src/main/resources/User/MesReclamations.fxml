@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<AnchorPane prefHeight="569.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.User.MesReclamationsController">
+
+    <VBox alignment="TOP_CENTER" prefHeight="527.0" prefWidth="920.0" spacing="15" style="-fx-padding: 20; -fx-background-color: white;">
+        <HBox spacing="10">
+            <TextField fx:id="searchField" promptText="Recherche titre ou description..." />
+            <ComboBox fx:id="statutFilter" promptText="Statut" />
+            <ComboBox fx:id="utilisateurFilter" promptText="Utilisateur" />
+        </HBox>
+
+        <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Mes Réclamations" />
+
+        <TableView fx:id="reclamationTable" prefWidth="680" styleClass="table-view">
+            <columns>
+                <TableColumn fx:id="titreCol" prefWidth="150" text="Titre" />
+                <TableColumn fx:id="descriptionCol" prefWidth="200" text="Description" />
+                <TableColumn fx:id="categorieCol" prefWidth="100" text="Catégorie" />
+                <TableColumn fx:id="statutCol" prefWidth="100" text="Statut" />
+                <TableColumn fx:id="envoyeeACol" prefWidth="150" text="Envoyée à" />
+                <TableColumn fx:id="actionsCol" prefWidth="279.0" text="Actions" />
+            </columns>
+        </TableView>
+
+    </VBox>
+</AnchorPane>

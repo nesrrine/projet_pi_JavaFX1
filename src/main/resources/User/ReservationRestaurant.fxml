@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<VBox spacing="20" alignment="TOP_CENTER" stylesheets="@/styles/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.User.ReservationRestaurantController">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <!-- Restaurant Details Section -->
+    <VBox spacing="15" styleClass="details-container" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+        <Label text="Détails du Restaurant" styleClass="section-title" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        
+        <GridPane hgap="15" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100" prefWidth="150"/>
+                <ColumnConstraints minWidth="200" prefWidth="300"/>
+            </columnConstraints>
+
+            <Label text="Nom:" styleClass="detail-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="nomLabel" styleClass="detail-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Localisation:" styleClass="detail-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="localisationLabel" styleClass="detail-value" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Description:" styleClass="detail-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="descriptionLabel" styleClass="detail-value" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Prix:" styleClass="detail-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="prixLabel" styleClass="detail-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- Images Gallery -->
+        <HBox spacing="10" alignment="CENTER">
+            <ImageView fx:id="mainImage" fitWidth="300" fitHeight="200" preserveRatio="true"/>
+            <VBox spacing="5">
+                <ImageView fx:id="image1" fitWidth="150" fitHeight="100" preserveRatio="true"/>
+                <ImageView fx:id="image2" fitWidth="150" fitHeight="100" preserveRatio="true"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Reservation Section -->
+    <VBox spacing="15" styleClass="reservation-container" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+        <Label text="Réservation" styleClass="section-title" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+        
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Date de réservation:" styleClass="detail-label"/>
+            <DatePicker fx:id="datePicker" styleClass="date-picker"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Nombre de personnes:" styleClass="detail-label"/>
+            <TextField fx:id="nombrePersonnesField" promptText="Entrez le nombre de personnes" prefWidth="200"/>
+        </HBox>
+
+        <Button fx:id="reserverButton" text="Réserver" styleClass="primary-button" 
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;"/>
+    </VBox>
+</VBox>

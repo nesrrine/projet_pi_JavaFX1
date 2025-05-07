@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+
+<VBox fx:id="root" spacing="15" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.User.ReclamationDetailController">
+    <!-- Carte contenant l'image et le bouton -->
+    <VBox styleClass="card" maxWidth="400" maxHeight="400" spacing="10">
+        <Label text="Image associée :"/>
+        <ImageView fx:id="imageView" fitWidth="300" fitHeight="200" preserveRatio="true"/>
+        <Button fx:id="downloadButton" text="Télécharger le fichier" onAction="#handleDownload" />
+    </VBox>
+</VBox>

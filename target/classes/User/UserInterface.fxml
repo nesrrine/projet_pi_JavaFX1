@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="725.0" prefWidth="1018.0" stylesheets="@/styles/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.User.UserInterfaceController">
+
+    <children>
+
+           <!-- Menu Bar -->
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="49.0" prefWidth="695.0">
+            <MenuBar fx:id="menuBar" prefHeight="79.0" prefWidth="695.0" styleClass="menu-bar">
+                <menus>
+                    <Menu text="Vlogs">
+                        <items>
+                            <MenuItem onAction="#handleAllVlogs" text="Tous les vlogs" />
+                            <MenuItem fx:id="myVlogsMenuItem" onAction="#handleMyVlogs" text="Mes vlogs" />
+                            <MenuItem fx:id="createVlogMenuItem" onAction="#handleCreateVlog" text="Créer un vlog" />
+                        </items>
+                    </Menu>
+
+                    <Menu text="Transports">
+                        <items>
+                            <MenuItem onAction="#handleAllTransports" text="Tous les transports" />
+                            <MenuItem  fx:id="myTransportsMenuItem"  onAction="#handleMyTransports"  text="Mes transports" />
+                            <MenuItem fx:id="createTransportsMenuItem"  onAction="#handleCreateTransport" text="Créer un transport" />
+                        </items>
+                    </Menu>
+                    <Menu text="Restaurants">
+                        <items>
+                            <MenuItem onAction="#handleAllRestaurants" text="Tous les restaurants" />
+                            <MenuItem fx:id="myRestaurantMenuItem"  onAction="#handleMyRestaurants" text="Mes restaurants" />
+                            <MenuItem  fx:id="createRestaurantMenuItem"  onAction="#handleCreateRestaurant" text="Créer un restaurant" />
+                        </items>
+                    </Menu>
+                    <Menu text="Réclamations">
+                        <items>
+                            <MenuItem onAction="#handleMyReclamations" text="Mes réclamations" />
+                            <MenuItem onAction="#handleCreateReclamation" text="Créer une réclamation" />
+                            <MenuItem onAction="#handleMyReclamationsrecus" text="réclamation recus" />
+
+                        </items>
+                    </Menu>
+
+                    <Menu text="Logements">
+                        <items>
+                            <MenuItem fx:id="createLogementMenuItem" onAction="#handleMylogements"  text="Créer un logement" />
+                            <MenuItem fx:id="LogementMenuItem" onAction="#handlelistLogment"  text="Mes Logements"  />
+                            <MenuItem onAction="#handleAllLogement"  text="Tous les  Logements"  />
+
+                        </items>
+                    </Menu>
+
+                </menus>
+            </MenuBar>
+        </VBox>
+
+
+        <!-- Top bar with profile icon -->
+        <HBox alignment="CENTER_RIGHT" layoutX="695.0" layoutY="5.0" prefHeight="42.0" prefWidth="320.0" style="-fx-background-color: white;">
+            <children>
+                <Region HBox.hgrow="ALWAYS" />
+                <ImageView fx:id="profileIcon" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleProfileClick" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                    <image>
+                        <Image url="@/images/profile.png" />
+                    </image>
+                </ImageView>
+                <Pane minWidth="20" />
+                <javafx.scene.control.Button fx:id="logoutButton" text="Déconnexion" onAction="#handleLogout" style="-fx-background-color: #dc3545; -fx-text-fill: white;"/>
+            </children>
+        </HBox>
+
+        <!-- Main content -->
+        <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="4.0" layoutY="49.0" prefHeight="673.0" prefWidth="1014.0" style="-fx-background-color:transparent;">
+            <content>
+                <VBox fx:id="mainContent" alignment="TOP_CENTER" prefHeight="694.0" prefWidth="1012.0" spacing="20" style="-fx-padding: 30; -fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);" />
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

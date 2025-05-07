@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="569.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.User.ReclamationsRecuesController">
+
+    <VBox alignment="TOP_CENTER" prefHeight="527.0" prefWidth="920.0" spacing="15" style="-fx-padding: 20; -fx-background-color: white;">
+
+        <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Mes Réclamations" />
+
+        <TableView fx:id="reclamationTable" prefWidth="680" styleClass="table-view">
+            <columns>
+                <TableColumn fx:id="titreCol" text="Titre" prefWidth="150"/>
+                <TableColumn fx:id="descriptionCol" text="Description" prefWidth="250"/>
+                <TableColumn fx:id="categorieCol" text="Catégorie" prefWidth="150"/>
+                <TableColumn fx:id="statutCol" text="Statut" prefWidth="100"/>
+                <TableColumn fx:id="envoyeeParCol" text="Envoyée par" prefWidth="200"/>
+                <TableColumn fx:id="actionCol" prefWidth="279.0" text="Actions" />
+            </columns>
+        </TableView>
+
+    </VBox>
+</AnchorPane>

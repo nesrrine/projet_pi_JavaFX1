@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.AnalyseSentimentController"
+      spacing="10"
+      style="-fx-padding: 20;">
+
+    <!-- Zone défilante qui contient les charts -->
+    <ScrollPane fitToWidth="true">
+        <VBox fx:id="sentimentChartContainer" spacing="20" />
+    </ScrollPane>
+
+</VBox>

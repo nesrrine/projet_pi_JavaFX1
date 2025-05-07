@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21.0.2"
+            fx:controller="controllers.User.MesVlogsController"
+            fitToWidth="true"
+            style="-fx-background-color: white;">
+    <content>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <!-- Notifications Section -->
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+                <Button fx:id="notificationButton" style="-fx-background-color: transparent; -fx-cursor: hand;">
+                    <graphic>
+                        <Label text="🔔" style="-fx-font-size: 24px;"/>
+                    </graphic>
+                </Button>
+
+                <Label fx:id="notificationBadge"
+                       text="0"
+                       visible="false"
+                       style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;
+                  -fx-padding: 4px 8px; -fx-background-radius: 10px; -fx-translate-x: -15;
+                  -fx-translate-y: -10; -fx-font-size: 12px;"/>
+            </HBox>
+
+
+            <!-- Vlog Container -->
+            <FlowPane fx:id="vlogContainer"
+                      hgap="20" vgap="20"
+                      alignment="TOP_LEFT"
+                      prefWrapLength="700"
+                      style="-fx-padding: 20;"/>
+        </VBox>
+    </content>
+</ScrollPane>
