@@ -8,8 +8,8 @@ import java.io.IOException;
 public class WhatsAppService {
     
     private static final String API_URL = "https://graph.facebook.com/v22.0/";
-    private static final String PHONE_NUMBER_ID = "616011074932752"; // Replace with your WhatsApp Business phone number ID
-    private static final String ACCESS_TOKEN = "EAAJ0Rikhh0sBO0c38eZCdPhm3fEUotZAGyXWbj9TdRUqnH4pMyFoh7YTnK0btXSVLhae0GpHk2TmvZB9cBKkVEKUUEWrwR95Hfnv2ctFD6jCZChQZAfnmeARqchcyAulaOMgcaUItNlKELJRCH1EBd9HQcC62qvHzyrC6OOzy2WbZCZC1KViZAF00AfS4TZBVygQSwBafWP5asmLqcRR0WHB4r9zSGdAZD"; // Replace with your WhatsApp Business API access token
+    private static final String PHONE_NUMBER_ID = "645188788676057"; // Replace with your WhatsApp Business phone number ID
+    private static final String ACCESS_TOKEN = "EAAamxLaO9KoBO0EhtKE9PoXBiBqeyZCArkbqQ3mbD9e2tWdXMDXBbF4ZAJHykECZBewYZBG9xrEwVgbV2N11NAi9Fp9hZCbmZADBidInZCAaR7H4UyE27gMCVZA9XbSROyTsDwmDWaCqsgtNslsgKdwvLWW5BCpfUHUSmY8M4DcWqlZA3bN7ab8oox6xcQixB7EkGK9pZBJyyAZB3CnuqiFtk99PXzVmmcZD"; // Replace with your WhatsApp Business API access token
     
     private final OkHttpClient client = new OkHttpClient();
     
