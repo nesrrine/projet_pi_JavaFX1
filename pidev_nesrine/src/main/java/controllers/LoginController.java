@@ -4,15 +4,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.User;
 import service.UserService;
 import utils.Session;
-import utils.TwilioSMSService;
+import service.TwilioSMSService;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class LoginController {
 

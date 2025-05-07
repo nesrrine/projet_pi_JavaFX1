@@ -1,9 +1,10 @@
 package controllers.User;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -12,11 +13,11 @@ import javafx.scene.paint.Color;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.FontWeight;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.application.Platform;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -24,6 +25,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
+import javafx.stage.Stage;
 import org.json.JSONObject;
 
 public class ChatbotController {
@@ -32,6 +34,7 @@ public class ChatbotController {
     @FXML private VBox chatBox;
     @FXML private TextField messageField;
     @FXML private Button sendButton;
+    @FXML private Button continueButton;
 
     private final String COHERE_API_KEY = "Rkca66hIPmjXMyRWMFZdMejdMyr1g5q6XZG5PGsZ";
     private final String SYSTEM_PROMPT = "Tu es un assistant virtuel pour une application appelée \"Home_Swap\". "
@@ -187,6 +190,21 @@ public class ChatbotController {
         } catch (Exception e) {
             e.printStackTrace();
             return "Désolé, je n'ai pas pu traiter votre demande. Veuillez réessayer plus tard.";
+        }
+    }
+
+    @FXML
+    private void handleContinue() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/User/UserInterface.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) continueButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            //showAlert(Alert.AlertType.ERROR, "Erreur lors du chargement de l'interface.");
         }
     }
 }

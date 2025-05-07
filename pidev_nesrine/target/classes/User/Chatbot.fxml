@@ -47,7 +47,8 @@
 
                 <Button fx:id="continueButton" text="Continuer →"
                         style="-fx-background-color: white; -fx-text-fill: #2E7D32; -fx-font-weight: bold;
-                               -fx-background-radius: 20; -fx-padding: 8 15;">
+                               -fx-background-radius: 20; -fx-padding: 8 15;"
+                        onAction="#handleContinue">
                     <effect>
                         <DropShadow height="5.0" radius="2.0" width="5.0">
                             <color>
