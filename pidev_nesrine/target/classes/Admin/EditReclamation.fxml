@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/21.0.2"
+           fx:controller="controllers.Admin.EditReclamationController"
+           prefWidth="400" prefHeight="250"
+           style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;">
+    <children>
+        <VBox spacing="15" alignment="CENTER">
+            <Label text="Modifier Statut Réclamation" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+            <ComboBox fx:id="statutComboBox" promptText="Choisir un statut" prefWidth="250" />
+            <Button text="Enregistrer" onAction="#handleSave"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
+        </VBox>
+    </children>
+</StackPane>

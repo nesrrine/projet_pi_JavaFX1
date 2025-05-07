@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0"
+           xmlns="http://javafx.com/javafx/21.0.2"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="controllers.Admin.LoginHistoryController"
+           style="-fx-background-color: #ffffff;">
+
+    <top>
+        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+            <Label text="Historique des connexions" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+            <Label text="Consultez l'historique des connexions des utilisateurs" style="-fx-text-fill: #555555;"/>
+
+            <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                <ComboBox fx:id="filterComboBox" promptText="Filtrer par" prefWidth="150" />
+
+
+                <ComboBox fx:id="userComboBox" promptText="Tous les utilisateurs" prefWidth="200" />
+
+                <DatePicker fx:id="startDatePicker" promptText="Date de début" />
+                <DatePicker fx:id="endDatePicker" promptText="Date de fin" />
+
+                <Button text="Filtrer" onAction="#handleFilter"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Réinitialiser" onAction="#handleReset"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 0 20 20 20;">
+            <TableView fx:id="historyTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+                    <TableColumn fx:id="userColumn" text="Utilisateur" prefWidth="150" />
+                    <TableColumn fx:id="dateTimeColumn" text="Date et heure" prefWidth="150" />
+                    <TableColumn fx:id="statusColumn" text="Statut" prefWidth="100" />
+                    <TableColumn fx:id="ipAddressColumn" text="Adresse IP" prefWidth="150" />
+                    <TableColumn fx:id="userAgentColumn" text="Agent utilisateur" prefWidth="250" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 20 20 20;">
+            <Label fx:id="totalEntriesLabel" text="Total: 0 entrées" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Exporter" onAction="#handleExport"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            <Button text="Effacer l'historique" onAction="#handleClear"
+                    style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            <Button text="Retour" onAction="#handleBack"
+                    style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+        </HBox>
+    </bottom>
+
+    <stylesheets>
+        <URL value="@/styles/style.css" />
+    </stylesheets>
+</BorderPane>
