@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.User.GainController"
+            prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: #f4f4f4;">
+
+    <Label fx:id="timerLabel"
+           layoutX="230" layoutY="100"
+           text="00:00"
+           style="-fx-font-size: 48; -fx-text-fill: #333;" />
+
+    <Button fx:id="startButton"
+            layoutX="180" layoutY="200"
+            text="Démarrer"
+            prefWidth="100"
+            onAction="#startTimer" />
+
+    <Button fx:id="stopButton"
+            layoutX="320" layoutY="200"
+            text="Arrêter"
+            prefWidth="100"
+            onAction="#stopTimer" />
+
+    <Label fx:id="resultLabel"
+           layoutX="100" layoutY="300"
+           prefWidth="400"
+           text=""
+           alignment="CENTER"
+           wrapText="true"
+           style="-fx-font-size: 18; -fx-text-fill: green;" />
+
+</AnchorPane>

@@ -15,15 +15,7 @@ import utils.Session;
 import java.io.IOException;
 
 public class UserInterfaceController {
-    @FXML private MenuItem createLogementMenuItem;
-    @FXML private MenuItem   LogementMenuItem;
 
-    @FXML private MenuItem myVlogsMenuItem;
-    @FXML private MenuItem createVlogMenuItem;
-    @FXML private MenuItem myTransportsMenuItem;
-    @FXML private MenuItem  createTransportsMenuItem;
-    @FXML private MenuItem myRestaurantMenuItem;
-    @FXML private MenuItem  createRestaurantMenuItem;
     @FXML private VBox mainContent;
     @FXML private Button logoutButton;
     @FXML private ImageView profileIcon;
@@ -36,52 +28,23 @@ public class UserInterfaceController {
     }
 
     private void configureMenuBasedOnRole() {
-
         User currentUser = Session.getCurrentUser();
-
-        if (currentUser != null) {
-            String role = currentUser.getRole();
-
-            if (!"Voyageur".equals(role)) {
-                myVlogsMenuItem.setVisible(false);
-                createVlogMenuItem.setVisible(false);
+        if (currentUser != null && "Voyageur".equals(currentUser.getRole())) {
+            // Parcourir tous les menus
+            for (Menu menu : menuBar.getMenus()) {
+                // Pour chaque menu, parcourir ses items
+                menu.getItems().removeIf(item -> {
+                    String text = item.getText();
+                    // Supprimer les options de création et de gestion personnelle
+                    return text != null && (text.startsWith("Créer") || 
+                           text.startsWith("Mes") ||
+                           text.contains("modifier") ||
+                           text.contains("supprimer"));
+                });
             }
+        }
+    }
 
-            if (!"Transporteur".equals(role)) {
-                myTransportsMenuItem.setVisible(false);
-                createTransportsMenuItem.setVisible(false);
-            }
-
-            if (!"Restaurant".equals(role)) {
-                myRestaurantMenuItem.setVisible(false);
-                createRestaurantMenuItem.setVisible(false);
-            }  if (!"Hôte".equals(role)) {
-                LogementMenuItem.setVisible(false);
-                createLogementMenuItem.setVisible(false);
-            }
-        } else {
-            // Si l'utilisateur n'est pas connecté, cacher tout ce qui est spécifique
-            myVlogsMenuItem.setVisible(false);
-            createVlogMenuItem.setVisible(false);
-            myTransportsMenuItem.setVisible(false);
-            createTransportsMenuItem.setVisible(false);
-        }}
-    private boolean isTRestaurant() {
-        User currentUser = Session.getCurrentUser();
-        return currentUser != null && "Restaurant".equals(currentUser.getRole());
-    }
-    private boolean isTransporteur() {
-        User currentUser = Session.getCurrentUser();
-        return currentUser != null && "Transporteur".equals(currentUser.getRole());
-    }
-    private boolean isVoyageur() {
-        User currentUser = Session.getCurrentUser();
-        return currentUser != null && "Voyageur".equals(currentUser.getRole());
-    }
-    private boolean isHote() {
-        User currentUser = Session.getCurrentUser();
-        return currentUser != null && "Hôte".equals(currentUser.getRole());
-    }
     @FXML
     private void handleLogout() {
         Session.clear();
@@ -105,24 +68,18 @@ public class UserInterfaceController {
     private void handleAllVlogs() {
         loadPartial("/user/TousLesVlogs.fxml");
     }
+
     @FXML
     private void handleMyVlogs() {
-        if (!isVoyageur()) {
-            showAlert("Accès refusé", "Seuls les voyageurs peuvent accéder à leurs vlogs.");
-            return;
-        }
+        if (checkVoyageurAccess()) return;
         loadPartial("/user/MesVlogs.fxml");
     }
 
     @FXML
     private void handleCreateVlog() {
-        if (!isVoyageur()) {
-            showAlert("Accès refusé", "Seuls les voyageurs peuvent créer un vlog.");
-            return;
-        }
+        if (checkVoyageurAccess()) return;
         loadPartial("/user/CreateVlog.fxml");
     }
-
 
     @FXML
     private void handleMyReclamations() {
@@ -132,17 +89,14 @@ public class UserInterfaceController {
 
     @FXML
     private void handleMylogements() {
-        if (!isHote()) {
-            showAlert("Accès refusé", "Seuls les hote peuvent crrer à leurs logemenets.");
-            return;}
+        if (checkVoyageurAccess()) return;
         loadPartial("/user/ajoutLogement.fxml");
     }
 
     @FXML
     private void handlelistLogment() {
-        if (!isHote()) {
-            showAlert("Accès refusé", "Seuls les hote peuvent accéder à leurs logemenets.");
-            return;}        loadPartial("/user/gestion_logement.fxml");
+        if (checkVoyageurAccess()) return;
+        loadPartial("/user/gestion_logement.fxml");
     }
 
 
@@ -164,21 +118,13 @@ public class UserInterfaceController {
 
     @FXML
     private void handleMyTransports() {
-        if (!isTransporteur()) {
-            showAlert("Accès refusé", "Seuls les voir mes   peuvent accéder à leurs tansport.");
-            return;
-
-        }        loadPartial("/user/MesTransports.fxml");
+        if (checkVoyageurAccess()) return;
+        loadPartial("/user/MesTransports.fxml");
     }
 
     @FXML
-
     private void handleCreateTransport() {
-        if (!isTransporteur()) {
-            showAlert("Accès refusé", "Seuls les creer   peuvent accéder à leurs tansport.");
-            return;
-
-        }
+        if (checkVoyageurAccess()) return;
         loadPartial("/user/CreateTransport.fxml");
     }
 
@@ -189,22 +135,15 @@ public class UserInterfaceController {
 
     @FXML
     private void handleMyRestaurants() {
-        if (!isTRestaurant()) {
-            showAlert("Accès refusé", "Seuls les restaurant   peuvent accéder à leurs restaurant.");
-            return;
-
-        }          loadPartial("/user/MesRestaurants.fxml");
+        if (checkVoyageurAccess()) return;
+        loadPartial("/user/MesRestaurants.fxml");
     }
 
     @FXML
     private void handleCreateRestaurant() {
-        if (!isTRestaurant()) {
-            showAlert("Accès refusé", "Seuls les creer   peuvent accéder à leurs restaurant.");
-            return;
-
-        }        loadPartial("/user/CreateRestaurant.fxml");
+        if (checkVoyageurAccess()) return;
+        loadPartial("/user/CreateRestaurant.fxml");
     }
-
 
     private boolean checkVoyageurAccess() {
         User currentUser = Session.getCurrentUser();
