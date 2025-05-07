@@ -12,6 +12,11 @@
 
         <Label text="Ajout d'une Réservation" style="-fx-font-size: 18px;"/>
 
+        <!-- 🔘 Bouton Voir les gains ajouté -->
+        <Button text="Voir les gains"
+                onAction="#handleVoirGains"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 15;"/>
+
         <!-- Formulaire -->
         <GridPane hgap="10" vgap="5">
             <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>

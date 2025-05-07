@@ -101,4 +101,17 @@ public class TousLesLogementsController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void handleVoirGains() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/User/agenda.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Agenda");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

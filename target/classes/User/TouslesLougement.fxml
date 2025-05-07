@@ -13,6 +13,12 @@
             <Label text="🏡 Liste des logements"
                    style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"
                    BorderPane.alignment="CENTER"/>
+
+            <!-- 🔘 Bouton ajouté -->
+            <Button text="Agenda"
+                    onAction="#handleVoirGains"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 15;"/>
+
             <HBox spacing="20" style="-fx-padding: 10 0 10 0;">
                 <VBox spacing="5">
                     <Label text="🔍 Par titre ou localisation:"/>

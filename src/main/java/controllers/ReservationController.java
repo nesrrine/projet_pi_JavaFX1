@@ -1,13 +1,18 @@
 package controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.stage.Stage;
 import models.Reservation;
 import service.EmailService;
 import service.ReservationService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class ReservationController {
@@ -99,7 +104,7 @@ public class ReservationController {
         EmailService emailService = new EmailService();
 
         // Adresse email du destinataire (vous pouvez la récupérer depuis un champ TextField si besoin)
-        String toEmail = "medoussemaamri2@gmail.com"; // À adapter ou rendre dynamique
+        String toEmail = "onsrebai00@gmail.com"; // À adapter ou rendre dynamique
 
         emailService.envoyerEmail(
                 toEmail,
@@ -143,4 +148,18 @@ public class ReservationController {
         selectedReservation = null;
         validateForm(); // Reset validation status
     }
+
+    @FXML
+    private void handleVoirGains() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/User/Gain.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Mes Gains");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
