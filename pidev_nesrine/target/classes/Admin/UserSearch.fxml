@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<StackPane prefHeight="600.0" prefWidth="800.0"
+           xmlns="http://javafx.com/javafx/21.0.2"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="controllers.Admin.UserSearchController"
+           style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-padding: 20;">
+    <children>
+        <VBox spacing="20" alignment="TOP_CENTER">
+            <Label text="Recherche d'utilisateurs">
+                <font>
+                    <Font name="Segoe UI Bold" size="22.0" />
+                </font>
+            </Label>
+
+            <!-- Formulaire de recherche -->
+            <GridPane hgap="15" vgap="15">
+                <padding>
+                    <Insets top="10" right="10" bottom="20" left="10"/>
+                </padding>
+
+                <!-- Type/Rôle -->
+                <Label text="Type (Rôle):" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <ComboBox fx:id="roleComboBox" promptText="Sélectionner un rôle"
+                          prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+
+                <!-- Email -->
+                <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="emailField" promptText="Rechercher par email"
+                           prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <!-- Nom -->
+                <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="lastNameField" promptText="Rechercher par nom"
+                           prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <!-- Prénom -->
+                <Label text="Prénom:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="firstNameField" promptText="Rechercher par prénom"
+                           prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <!-- Boutons -->
+                <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <Button fx:id="searchButton" text="Rechercher"
+                            onAction="#handleSearch"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
+                    <Button fx:id="resetButton" text="Réinitialiser"
+                            onAction="#handleReset"
+                            style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;" />
+                </HBox>
+
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="100" prefWidth="150" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300" />
+                </columnConstraints>
+            </GridPane>
+
+            <!-- Résultats de recherche -->
+            <Label text="Résultats de la recherche:" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+
+            <TableView fx:id="userTableView" VBox.vgrow="ALWAYS" prefHeight="350">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+                    <TableColumn fx:id="firstNameColumn" text="Prénom" prefWidth="120" />
+                    <TableColumn fx:id="lastNameColumn" text="Nom" prefWidth="120" />
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="150" />
+                    <TableColumn fx:id="roleColumn" text="Rôle" prefWidth="100" />
+                    <TableColumn fx:id="statusColumn" text="Statut" prefWidth="80" />
+                </columns>
+                <stylesheets>
+                    <URL value="@/styles/style.css" />
+                </stylesheets>
+            </TableView>
+        </VBox>
+    </children>
+</StackPane>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import java.net.URL?>
+<StackPane prefHeight="550.0" prefWidth="750.0"
+           xmlns="http://javafx.com/javafx/21.0.2"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="controllers.Admin.UserManagementController"
+           style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-padding: 20;">
+    <children>
+        <VBox spacing="20" alignment="TOP_CENTER">
+            <Label text="Gestion des utilisateurs">
+                <font>
+                    <Font name="Segoe UI Bold" size="22.0" />
+                </font>
+            </Label>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+
+                <Button fx:id="statsButton" text="Statistiques des rôles"
+                        onAction="#handleShowRoleStats"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;" />
+                <Button fx:id="searchButton" text="Rechercher des utilisateurs"
+                        onAction="#handleOpenSearch"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
+            </HBox>
+
+            <ListView fx:id="userListView" prefHeight="450" prefWidth="680">
+                <stylesheets>
+                    <URL value="@/styles/style.css" />
+                </stylesheets>
+            </ListView>
+        </VBox>
+    </children>
+</StackPane>

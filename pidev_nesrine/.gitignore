@@ -1,0 +1,22 @@
+# Compiled class files
+*.class
+target/
+
+# Configuration files with sensitive information
+src/main/java/utils/TwilioSMSService.java
+src/main/java/utils/EmailService.java
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Logs
+*.log
+
+# OS specific files
+.DS_Store
+Thumbs.db
