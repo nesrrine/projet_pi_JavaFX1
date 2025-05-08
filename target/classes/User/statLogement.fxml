@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.StatLogementController"
+            style="-fx-background-color: #f0f4f8; -fx-padding: 20;"
+            prefWidth="900" prefHeight="600" minWidth="800" minHeight="500">
+
+    <top>
+        <Label text="📊 Statistiques des logements par localisation"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a; -fx-padding: 15;"
+               BorderPane.alignment="CENTER"/>
+    </top>
+
+    <center>
+        <BarChart fx:id="barChart" title="Nombre de logements par localisation"
+                  style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 20;"
+                  prefWidth="800" prefHeight="500">
+            <xAxis>
+                <CategoryAxis label="Localisation"
+                              style="-fx-tick-label-fill: #333; -fx-font-size: 13px;"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Nombre de logements"
+                            style="-fx-tick-label-fill: #333; -fx-font-size: 13px;"/>
+            </yAxis>
+        </BarChart>
+    </center>
+
+</BorderPane>

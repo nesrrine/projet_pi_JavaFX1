@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.User.TousLesLogementsController"
+            style="-fx-padding: 20; -fx-background-color: #f8f8f8;">
+
+    <top>
+        <VBox spacing="10">
+            <Label text="🏡 Liste des logements"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"
+                   BorderPane.alignment="CENTER"/>
+
+            <!-- 🔘 Bouton ajouté -->
+            <Button text="Agenda"
+                    onAction="#handleVoirGains"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 15;"/>
+
+            <HBox spacing="20" style="-fx-padding: 10 0 10 0;">
+                <VBox spacing="5">
+                    <Label text="🔍 Par titre ou localisation:"/>
+                    <TextField fx:id="searchFieldText" promptText="Ex: Paris, villa..." prefWidth="250"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="🔍 Par prix:"/>
+                    <ComboBox fx:id="comboPrix" promptText="Choisir un prix" prefWidth="150"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tableLogement" prefHeight="500" prefWidth="800">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colTitre" text="Titre" prefWidth="150"/>
+                <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
+                <TableColumn fx:id="colLocalisation" text="Localisation" prefWidth="150"/>
+                <TableColumn fx:id="colPrix" text="Prix (€)" prefWidth="100"/>
+                <TableColumn fx:id="colReserver" text="Action" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

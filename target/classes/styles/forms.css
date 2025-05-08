@@ -1,0 +1,120 @@
+/* Form layout */
+.form-container {
+    -fx-padding: 20px;
+    -fx-spacing: 10px;
+}
+
+.form-row {
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+}
+
+.form-label {
+    -fx-font-weight: bold;
+    min-width: 100px;
+}
+
+.text-field, .text-area {
+    background-color: white;
+    -fx-background-color: white;
+    -fx-pref-width: 300px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-border-color: #cccccc;
+    padding: 5px;
+    -fx-padding: 5px;
+    font-size: 14px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.3), 4, 0, 0, 0);
+}
+
+.text-field:hover, .text-area:hover {
+    border-color: #999999;
+    -fx-border-color: #999999;
+}
+
+.text-field.error, .text-area.error {
+    -fx-border-color: #f44336;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(244,67,54,0.3), 4, 0, 0, 0);
+}
+
+.text-field.error:focused, .text-area.error:focused {
+    -fx-border-color: #d32f2f;
+}
+
+.button {
+    -fx-background-radius: 4px;
+    padding: 8px 15px;
+    -fx-padding: 8px 15px;
+    cursor: pointer;
+    -fx-cursor: hand;
+    font-size: 14px;
+    -fx-font-size: 14px;
+}
+
+.button:hover {
+    opacity: 0.9;
+    -fx-opacity: 0.9;
+}
+
+.btn-submit {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.btn-submit:hover {
+    -fx-background-color: #1976D2;
+}
+
+.btn-image {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.btn-image:hover {
+    -fx-background-color: #388E3C;
+}
+
+.tooltip {
+    -fx-background-color: #424242;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5px;
+}
+
+.dialog-pane {
+    -fx-background-color: white;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #f5f5f5;
+}
+
+.dialog-pane .content {
+    -fx-padding: 15px;
+}
+
+.dialog-pane .button-bar .button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 5px;
+}
+
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: #1976D2;
+}
